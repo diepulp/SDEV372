@@ -3,7 +3,6 @@ body{
 }
 .container{
     display: flex;
-    background-color: lightgrey;
     align-items: center;
     justify-content: space-evenly;
     flex-direction: column;
@@ -12,7 +11,7 @@ body{
 }
 .container > h1 {
     margin: 10px;
-    font-family: "Arial Black", "SansSerif";
+    font-family: "Arial Black", "SansSerif", serif;
 }
 img {
     width: 300px;
