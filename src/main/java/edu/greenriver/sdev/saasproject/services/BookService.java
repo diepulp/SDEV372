@@ -11,6 +11,8 @@ import java.util.Optional;
 /**
  * The Service Layer provides business logic for the Controller
  * in the RESTful api architecture
+ * @author Vladimir Ivanov
+ * @version 1.0
  */
 @Service
 public class BookService {
@@ -37,12 +39,15 @@ public class BookService {
     /**
      * Create
      * @param title Book title
-     * @param metaData MetaData object to provide additional information for the book
+     * @param metaData MetaData object to provide l information for the book
      * @return book object
      */
    
     public Book addBooks(String title, MetaData metaData){
-        Book newBook =  Book.builder().title(title).metaData(metaData).build();
+        Book newBook =  Book.builder()
+                .title(title)
+                .metaData(metaData)
+                .build();
         books.add(newBook);
         return newBook;
     }
@@ -58,23 +63,22 @@ public class BookService {
 
     /**
      * Update
-     * @param id integer unique id
+     * @param bookId integer unique id
      * @param title String book title
      * @param author Author
      * @param index gunning fog index
      * @param metaData MetaData object
-     * @return
+     * @return Book object
      */
     
-    public Book updateBook(int id, String title, String author, int index, MetaData metaData){
+    public Book updateBook(int bookId, String title, String author, int index, MetaData metaData){
         Optional<Book> bookFound = books.stream()
-                .filter(book -> book.getBookId() == id)
+                .filter(book -> book.getBookId() == bookId)
                 .findFirst();
 
         if (bookFound.isPresent()){
             Book book = bookFound.get();
             book.setAuthor(author);
-            book.setGunningFog(index);
             book.setTitle(title);
             book.setMetaData(metaData);
             return book;
@@ -85,11 +89,24 @@ public class BookService {
 
     /**
      * Delete
-     * @param id book id
+     * @param bookId book unique identifier
      */
-    public void deleteBook(int id){
+    public void deleteBook(int bookId){
         books = books.stream()
-                .filter(book -> book.getBookId() != id)
+                .filter(book -> book.getBookId() != bookId)
                 .toList();
+    }
+
+    /**
+     * @param bookId book id
+     * @return boolean
+     */
+    public boolean bookExists(int bookId) {
+        return books.stream().anyMatch(book -> book.getBookId() == bookId);
+    }
+
+    public double getHighestIndex(){
+        double index = books.stream().filter(book -> book.getGunningFog() <= 9.0).count();
+        return index;
     }
 }

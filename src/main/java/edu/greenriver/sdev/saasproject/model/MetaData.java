@@ -1,20 +1,25 @@
 package edu.greenriver.sdev.saasproject.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class MetaData {
     private int bookRank;
     private int downloads;
     private String url;
 
-    public MetaData(int rank){
-        this.bookRank = rank;
+    private double gunningFog;
+    private int yearReleased;
+
+    public MetaData(){
+    }
+
+    public MetaData(int bookRank, String url, int downloads, int yearReleased) {
+        this.bookRank = bookRank;
+        this.yearReleased = yearReleased;
+        this.url = url;
+        this.downloads = downloads;
     }
 }
