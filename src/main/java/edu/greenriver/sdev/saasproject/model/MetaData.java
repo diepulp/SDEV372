@@ -10,7 +10,6 @@ public class MetaData {
     private int downloads;
     private String url;
 
-    private double gunningFog;
     private int yearReleased;
 
     public MetaData(){
