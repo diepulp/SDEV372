@@ -34,16 +34,28 @@ public class WebApi {
     //GET request to http://localhost:8080/api/v1/book
     @GetMapping("")
     public ResponseEntity<List<Book>> getAllBooks(){
+        if (service.allBooks().isEmpty()){
+            return new ResponseEntity<>(service.allBooks(), HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(service.allBooks(), HttpStatus.OK);
     }
 
     @GetMapping("metadata")
     public ResponseEntity<List<MetaData>> getMeta(){
+        if (service.getMeta().isEmpty()){
+            return new ResponseEntity<>(service.getMeta(), HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(service.getMeta(), HttpStatus.OK);
     }
 
 
-    @PutMapping("metadata/{id}")
+    /**
+     * Updates metadata for a book with a given ID
+     * @param bookId UUID unique id
+     * @param metadata MetaData object
+     * @return
+     */
+    @PutMapping("metadata/update/{id}")
     public ResponseEntity<Object> updateMeta(@PathVariable("id") UUID bookId, @RequestBody MetaData metadata){
         if (!service.idExists(bookId)){
             return  new ResponseEntity<>("The book is not found", HttpStatus.NOT_FOUND);
@@ -78,14 +90,34 @@ public class WebApi {
                                     tempBook), HttpStatus.OK);
     }
 
+    /**
+     * Delete a book from the collection
+     * @param tempBook UUID book id
+     */
+    @DeleteMapping("")
+    public ResponseEntity<Object> deleteBook(@RequestBody Book tempBook){
+        if (!service.bookExists(tempBook)){
+            return new ResponseEntity<>("The book could not be found in the collection", HttpStatus.NOT_FOUND);
+        } else if (!service.idExists(tempBook.getBookId())){
+            return new ResponseEntity<>("Please type the correct id", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("The book was successfully deleted", HttpStatus.OK);
+    }
+
+
+    /**
+     * Deletes metadata for a given book
+     * @param id UUID object
+     * @return
+     */
     @DeleteMapping("metadata/delete/{id}")
-    public ResponseEntity<? extends Object> deleteBook(@PathVariable UUID id){
+    public ResponseEntity<Object> deleteMeta(@PathVariable UUID id){
         MetaData metaData = new MetaData();
         if (!service.idExists(id)){
             return  new ResponseEntity<>("The book is not found", HttpStatus.NOT_FOUND);
-        } else {
-            return  ResponseEntity.ok(service.updateMeta(metaData, id));
         }
+        return new ResponseEntity<>("The metadata was successfully deleted", HttpStatus.OK);
+
     }
 
     @RequestMapping("home")

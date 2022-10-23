@@ -7,7 +7,7 @@
 # Author
 * Vladimir Ivanov
 * Class SDEV 372
-* Fall 2022 Quarter
+* Fall Semester 2022
 
 # Milestones
 * Project Creation
@@ -21,3 +21,7 @@ The project is intended to provide Computer Science students with the
 list of books in the field of study. The Web API will provide 
 the access to the list of books constructed from the references to the
 popular websites.
+
+
+
+## Postman API documentation url:  https://documenter.getpostman.com/view/23585677/2s84DstgNZ 
