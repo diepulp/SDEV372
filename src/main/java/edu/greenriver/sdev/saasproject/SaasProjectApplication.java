@@ -14,6 +14,8 @@ import java.util.Scanner;
 public class SaasProjectApplication {
 
     public static void main(String[] args) {
+
+
         Scanner scanner;
 
         SpringApplication.run(SaasProjectApplication.class, args);
@@ -28,5 +30,6 @@ public class SaasProjectApplication {
                 throw new RuntimeException(e);
             }
         }
+
     }
 }

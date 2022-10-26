@@ -18,22 +18,22 @@ import java.util.UUID;
 @Service
 public class BookService {
   private List<Book> books = new ArrayList<>(List.of(
-//         Book.builder()
-//                 .author("Austen, Jane")
-//                 .title("Pride and Prejudice")
-//                 .language("En")
-//                 .gunningFog(9.0)
-//                 .bookId()
-//                 .metaData(MetaData.builder().bookRank(5).build())
-//                 .build(),
-//        Book.builder()
-//                .title("Alice's Adventures in Wonderland")
-//                .language("En")
-//                .author("Lewis Carrol")
-//                .gunningFog(8.8)
-//                .bookId()
-//                .metaData(MetaData.builder().bookRank(3).build())
-//                .build()
+         Book.builder()
+                 .author("Austen, Jane")
+                 .title("Pride and Prejudice")
+                 .language("En")
+                 .gunningFog(9.0)
+                 .bookId()
+                 .metaData(MetaData.builder().bookRank(5).build())
+                 .build(),
+        Book.builder()
+                .title("Alice's Adventures in Wonderland")
+                .language("En")
+                .author("Lewis Carrol")
+                .gunningFog(8.8)
+                .bookId()
+                .metaData(MetaData.builder().bookRank(3).build())
+                .build()
             ));
 
     /**
@@ -116,11 +116,11 @@ public class BookService {
 
     /**
      * Delete a record from the library
-     * @param bookId book unique identifier
+     * @param tempBook Book Object
      */
-    public void deleteBook(UUID bookId){
+    public void deleteBook(Book tempBook){
         books = books.stream()
-                .filter(book -> !book.getBookId().equals(bookId))
+                .filter(book -> !book.getBookId().equals(tempBook.getBookId()))
                 .toList();
     }
 
@@ -134,16 +134,11 @@ public class BookService {
 
     /**
      * A helper method to verify if the id exists
-     * @param id UUID object
+     * @param uuid UUID object
      * @return boolean value
      */
-    public boolean idExists(UUID id){
-        return books.stream().anyMatch(book -> book.getBookId().equals(id));
+    public boolean idExists(UUID uuid){
+        return books.stream().anyMatch(book -> book.getBookId().equals(uuid));
     }
 
-    public double getHighestIndex(){
-        //TODO: use reduce
-        double index = books.stream().filter(book -> book.getGunningFog() <= 9.0).count();
-        return index;
-    }
 }
