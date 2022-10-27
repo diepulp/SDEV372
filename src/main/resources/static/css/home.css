@@ -17,3 +17,16 @@ img {
     width: 300px;
     height: auto;
 }
+
+#form-post {
+    display: flex;
+    flex-direction: column;
+}
+
+#form-post > label {
+    margin: 5px;
+    color: #3d376c;
+}
+#submit {
+    margin-top: 5px;
+}

@@ -139,6 +139,5 @@ public class WebApi {
             return  new ResponseEntity<>("The book is not found", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(service.updateMeta(metaData, uuid), HttpStatus.OK);
-
     }
 }

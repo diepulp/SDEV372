@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/home.css">
     <title>CSBooks</title>
+    <script src="js/load_data.js"></script>
 </head>
 <body>
 <main id="main">
@@ -15,8 +16,31 @@
         <img src="
         images/dataset-cover1.jpg" alt="img">
         <section>
-            <p>This is a landing page for project Guttenberg Books</p>
+            <p>This is a landing page for project Gutenberg Books</p>
         </section>
+
+        <section id="load-books">
+        </section>
+        <form id="form-post" action="#">
+            <div><p><h3>Update book collection</h3></p></div>
+            <label for="book-author">Enter the author</label>
+            <input type="text" id="book-author">
+
+            <label for="book-title">Enter the title of the book</label>
+            <input type="text" id="book-title">
+
+            <label for="book-lang">Enter the language of the book</label>
+            <input type="text" id="book-lang">
+
+            <label for="fog-index">Enter the text complexity index</label>
+            <input type="text" id="fog-index">
+
+            <label for="meta">Enter the book rank</label>
+            <input type="text" id="meta">
+
+            <button id="submit">Update</button>
+
+        </form>
     </div>
     <section>
         <!--/*@thymesVar id="highestIndex" type=""*/-->
