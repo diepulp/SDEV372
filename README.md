@@ -1,5 +1,5 @@
 # Saas project
-# Computer Science Book Recomendation
+# Project Gutenberg Book collection
 ![logo](src/main/resources/static/images/dataset-cover1.jpg)
 
 #Project Properties
