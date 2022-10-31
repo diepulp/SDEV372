@@ -3,31 +3,28 @@
  */
 window.onload = () => {
 
-    let button = document.querySelector("#submit")
+    let submitPost = document.querySelector("#submit")
     const url = "http://localhost:8080/api/v1/book"
     const paramsGet = paramsInit("get")
+
+    //send GET to the api
+    fetchData(url, paramsGet).then(data => {
+        renderBooks(data);
+    })
 
     /**
      * Functions handles the button click and appends the last fetch
      * object values to the DOM elements
      */
     //use anonymous function as a wrapper to pass parameters to the event listener
-    button.addEventListener("click", (event) =>{
-        handlePost(event)
-        fetchData(url, paramsGet).then(data => {
-            let last = data.pop()
-            let {...rest} = last;
-            let bookList = document.getElementById("book-display")
-            let h3 = document.createElement("h3")
-            h3.innerText = rest.title
-            bookList.appendChild(h3)
+    submitPost.addEventListener("click", (event) => {
+        handlePost(event).then(() => {
+            fetchData(url, paramsGet).then(data => {
+                let last = data.pop()
+                createElements(last)
+            })
         })
-    })
 
-
-    //send GET to the api
-    fetchData(url, paramsGet).then(data => {
-        renderBooks(data);
     })
 
 
@@ -43,7 +40,6 @@ window.onload = () => {
     //     console.log(arr.pop())
     // })
 }
-
 
 
 /**
@@ -72,14 +68,61 @@ async function fetchData(url, params) {
 
 }
 
+function createElements(book) {
+    let {...rest} = book;
+
+    //table
+    let tableBody = document.querySelector("#books")
+    let tableRow = document.createElement("tr")
+    let author = document.createElement("td")
+    let title = document.createElement("td")
+    let gunningFog = document.createElement("td")
+    let language = document.createElement("td")
+    let bookId = document.createElement("td")
+    let metaData = document.createElement("td")
+    let buttonLot = document.createElement("td")
+    let delButton = document.createElement("button")
+
+    delButton.innerText = "x"
+    buttonLot.appendChild(delButton)
+    author.innerText = rest.author
+    gunningFog.innerText = rest.gunningFog
+    title.innerText = rest.title
+    language.innerText = rest.language
+    metaData.innerText = rest.metaData.bookRank
+    bookId.innerText = rest.bookId
+
+    tableRow.appendChild(title)
+    tableRow.appendChild(author)
+    tableRow.appendChild(language)
+    tableRow.appendChild(gunningFog)
+    tableRow.appendChild(bookId)
+    tableRow.appendChild(metaData)
+    tableRow.appendChild(buttonLot)
+
+    tableBody.appendChild(tableRow)
+
+
+
+    for (const key in book ){
+        console.log(`${key}: ${book[key]}`)
+    }
+
+
+    for (const [key, value] of Object.entries(book)) {
+        // let bookKey = document.createElement("p")
+        // let bookValue = document.createElement("p")
+
+    }
+
+    //
+    // bookTitle.innerText = rest.title
+    // author.innerText = rest.author
+}
+
 function renderBooks(data) {
     data.forEach((book) => {
-        let {...rest} = book;
-        let bookList = document.getElementById("book-display")
-        let h3 = document.createElement("h3")
-
-        h3.innerText = rest.title
-        bookList.appendChild(h3)
+        createElements(book)
     })
     return data
 }
@@ -89,9 +132,10 @@ function renderBooks(data) {
  * onto the postData fetch
  * @param event
  */
-function handlePost(event) {
+async function handlePost(event) {
     event.preventDefault();
     //TODO: clean up this function
+
     const url = "http://localhost:8080/api/v1/book"
     let bookTitle = document.querySelector("#book-title").value
     let bookAuthor = document.querySelector("#book-author").value
@@ -100,7 +144,7 @@ function handlePost(event) {
     let gunningFog = document.querySelector("#fog-index").value
 
     let fields = [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog]
-    postData(url, fields).then(r => console.log(r))
+    await postData(url, fields)
 }
 
 async function postData(url, inputs) {

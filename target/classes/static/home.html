@@ -12,19 +12,31 @@
 <body>
 <main id="main">
     <div class="container">
-        <h1>Most Popular books</h1>
-        <img src="
-        images/dataset-cover1.jpg" alt="img">
-        <section>
-            <p>This is a landing page for project Gutenberg Books</p>
-        </section>
+        <header>
+            <h1>Project Gutenberg Book Collection</h1>
+        </header>
+<!--        <section>-->
+<!--            <img src="-->
+<!--        images/dataset-cover1.jpg" alt="img">-->
+<!--        </section>-->
 
-        <section id="book-display">
 
-        </section>
+        <table id="table">
+            <thead id="tHead">
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Language</th>
+                <th>Gunning Fog</th>
+                <th>Book Id</th>
+                <th>MetaData</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="books">
+            </tbody>
+        </table>
 
-        <section id="load-books">
-        </section>
         <form id="form-post" action="#">
             <div><p><h3>Update book collection</h3></p></div>
             <label for="book-author">Enter the author</label>
