@@ -4,13 +4,25 @@
 window.onload = () => {
 
     let submitPost = document.querySelector("#submit")
-    const url = "http://localhost:8080/api/v1/book"
-    const paramsGet = paramsInit("get")
+    console.log(submitPost)
 
-    //send GET to the api
-    fetchData(url, paramsGet).then(data => {
+    let delUrl = "http://localhost:8080/api/v1/book/delete-book"
+    let jsonObj = {
+        "bookId": "7ac5e9ff-d5fb-4e62-9913-"
+    }
+    let paramsDel = paramsInit("DELETE", "application/json", JSON.stringify(jsonObj))
+
+    fetch(delUrl, paramsDel).then((res) => {
+        console.log(res)
+    })
+
+    /**
+     * Sends GET request to the API
+     */
+    fetchData().then(data => {
         renderBooks(data);
     })
+
 
     /**
      * Functions handles the button click and appends the last fetch
@@ -18,29 +30,13 @@ window.onload = () => {
      */
     //use anonymous function as a wrapper to pass parameters to the event listener
     submitPost.addEventListener("click", (event) => {
-        handlePost(event).then(() => {
-            fetchData(url, paramsGet).then(data => {
-                let last = data.pop()
-                createElements(last)
-            })
+        handlePost(event).then((res) => {
+            console.log("Response after posting data" + res)
+
+            createElements(res)
         })
-
     })
-
-
-    // The Object.entries() method returns an array
-    // of a given object's own enumerable string-keyed property
-    // fetchData(url, paramsGet).then(arr => {
-    //     arr.forEach(ell => {
-    //         console.log(Object.entries(ell))
-    //         for (const [key, value] of Object.entries(ell)){
-    //             console.log(`Key ${key} Value ${value}`)
-    //         }
-    //     })
-    //     console.log(arr.pop())
-    // })
 }
-
 
 /**
  * Parameters for fetch calls
@@ -57,21 +53,29 @@ function paramsInit(method = "", appType = "", body = null) {
     }
 }
 
-async function fetchData(url, params) {
+/**
+ *
+ * Fetches data from the server with GET request
+ * @returns {Promise<any>}
+ */
+async function fetchData() {
+    const url = "http://localhost:8080/api/v1/book"
+    const paramsGet = paramsInit("get")
     try {
-        const response = await fetch(url, params)
+        const response = await fetch(url, paramsGet)
         const json = await response.json()
-        return (json)
+        console.log("Json from fetch data " + json)
+        return json
     } catch (err) {
-        console.log(err)
+        console.log("fetch data error" + err)
     }
 
 }
 
 function createElements(book) {
-    let {...rest} = book;
+    let {...rest} = book
 
-    //table
+    //table tags
     let tableBody = document.querySelector("#books")
     let tableRow = document.createElement("tr")
     let author = document.createElement("td")
@@ -82,15 +86,30 @@ function createElements(book) {
     let metaData = document.createElement("td")
     let buttonLot = document.createElement("td")
     let delButton = document.createElement("button")
+    delButton.setAttribute("value", rest.bookId)
+    tableRow.setAttribute("id", rest.bookId)
+    console.log(tableRow)
+    let attributeId = delButton.getAttribute("value")
 
-    delButton.innerText = "x"
+    //attach an event listener to the dynamically added button
+    //to invoke the fetch delete call and re-render the layout
+    delButton.addEventListener("click",() =>{
+        console.log(`Attribute id ${attributeId}`)
+        handleDel(attributeId)
+    })
+
+
+    //supply values for the elements
     buttonLot.appendChild(delButton)
     author.innerText = rest.author
     gunningFog.innerText = rest.gunningFog
     title.innerText = rest.title
     language.innerText = rest.language
-    metaData.innerText = rest.metaData.bookRank
+    // metaData.innerText = rest.metaData.bookRank
     bookId.innerText = rest.bookId
+    delButton.innerText = "x"
+    delButton.classList.add("del")
+
 
     tableRow.appendChild(title)
     tableRow.appendChild(author)
@@ -102,41 +121,28 @@ function createElements(book) {
 
     tableBody.appendChild(tableRow)
 
-
-
-    for (const key in book ){
-        console.log(`${key}: ${book[key]}`)
-    }
-
-
-    for (const [key, value] of Object.entries(book)) {
-        // let bookKey = document.createElement("p")
-        // let bookValue = document.createElement("p")
-
-    }
-
-    //
-    // bookTitle.innerText = rest.title
-    // author.innerText = rest.author
 }
 
 function renderBooks(data) {
-    data.forEach((book) => {
-        createElements(book)
-    })
+    try{
+        data.forEach((book) => {
+            createElements(book)
+        })
+    } catch (e){
+        console.log(e)
+    }
+
     return data
 }
 
 /**
  * Function collects input from the form and passes it
- * onto the postData fetch
+ * onto the postData fetch call
  * @param event
  */
 async function handlePost(event) {
     event.preventDefault();
-    //TODO: clean up this function
 
-    const url = "http://localhost:8080/api/v1/book"
     let bookTitle = document.querySelector("#book-title").value
     let bookAuthor = document.querySelector("#book-author").value
     let bookLanguage = document.querySelector("#book-lang").value
@@ -144,11 +150,61 @@ async function handlePost(event) {
     let gunningFog = document.querySelector("#fog-index").value
 
     let fields = [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog]
-    await postData(url, fields)
+    const response = await postData(fields)
+    return response
 }
 
-async function postData(url, inputs) {
+/**
+ *
+ */
+ function handleDel(id){
+   let rowToDelete = document.getElementById(`${id}`)
+    console.log("Row to delete" , rowToDelete)
+    console.log(`Del fired ${id}`)
+    rowToDelete.remove()
+    delData(id).then(() => {
+       console.log("Del request sent")
+    })
+
+}
+
+/**
+ * Configures the fetch call with an id and params
+ * @param bookId
+ * @returns {Promise<any>}
+ */
+async function delData(bookId){
+
+    let delUrl = `http://localhost:8080/api/v1/book/delete-book/${bookId}`
+    // let jsonObj = {
+    //     "bookId": bookId
+    // }
+
+    let param = {
+        method: "delete",
+        headers: {
+            "Content-type": "application/json"
+        },
+        // body: JSON.stringify(jsonObj)
+    }
+
+    try {
+         await fetch(delUrl, param)
+    } catch (error){
+       return error
+    }
+}
+
+/**
+ * Configures and sends the post request to the API
+ * @param url
+ * @param inputs
+ * @returns {Promise<any>}
+ */
+async function postData( inputs) {
     let [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog] = inputs
+
+    const url = "http://localhost:8080/api/v1/book"
 
     let jsonObj = {
         "title": bookTitle,
@@ -169,7 +225,11 @@ async function postData(url, inputs) {
     }
     try {
         const response = await fetch(url, param)
-        return await response.json()
+        console.log( " post response" + response)
+        const data = await response.json()
+        console.log("data from post response" + data)
+        // const newBook = await response.json()
+        return data
     } catch (error) {
         return error
     }

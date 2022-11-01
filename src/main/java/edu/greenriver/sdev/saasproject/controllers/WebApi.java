@@ -4,7 +4,9 @@ import edu.greenriver.sdev.saasproject.model.Book;
 import edu.greenriver.sdev.saasproject.model.MetaData;
 import edu.greenriver.sdev.saasproject.services.BookService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("api/v1/book")
 public class WebApi {
+
     private BookService service;
 
     /**
@@ -78,14 +81,15 @@ public class WebApi {
      * @param tempBook Book object
      * @return ResponseEntity object
      */
-    @PostMapping("")
+    @PostMapping(
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
+    )
     public ResponseEntity<Object> addBook(@RequestBody Book tempBook){
         if (tempBook.getTitle().isEmpty() || tempBook.getTitle() == null){
             return new ResponseEntity<>("The book title cannot be empty / null ", HttpStatus.BAD_REQUEST);
         }
-        return
-                new ResponseEntity<>(service.addBooks(tempBook
-                ), HttpStatus.CREATED);
+        return new ResponseEntity<>(service.addBooks(tempBook), HttpStatus.CREATED);
     }
 
     /**
@@ -112,17 +116,15 @@ public class WebApi {
 
     /**
      * Delete a book from the collection
-     * @param book  Book object
+     * @param bookId UUID
      * @return ResponseEntity object
      */
-    @DeleteMapping("delete-book")
-    public ResponseEntity<Object> deleteBook(@RequestBody Book book){
-        if (!service.bookExists(book)){
+    @DeleteMapping("delete-book/{bookId}")
+    public ResponseEntity<Object> deleteBook(@PathVariable UUID bookId){
+        if (!service.idExists(bookId)){
             return new ResponseEntity<>("The book could not be found in the collection", HttpStatus.NOT_FOUND);
-        } else if (!service.idExists(book.getBookId())){
-            return new ResponseEntity<>("Please type the correct id", HttpStatus.BAD_REQUEST);
         }
-            service.deleteBook(book);
+            service.deleteBook(bookId);
             return  ResponseEntity.noContent().build();
     }
 

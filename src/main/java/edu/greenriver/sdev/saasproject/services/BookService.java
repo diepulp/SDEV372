@@ -2,6 +2,7 @@ package edu.greenriver.sdev.saasproject.services;
 
 import edu.greenriver.sdev.saasproject.model.Book;
 import edu.greenriver.sdev.saasproject.model.MetaData;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,41 +13,44 @@ import java.util.UUID;
 /**
  * The Service Layer provides business logic for the Controller
  * in the RESTful api architecture
+ *
  * @author Vladimir Ivanov
  * @version 1.0
  */
 @Service
 public class BookService {
-  private List<Book> books = new ArrayList<>(List.of(
-         Book.builder()
-                 .author("Austen, Jane")
-                 .title("Pride and Prejudice")
-                 .language("En")
-                 .gunningFog(9.0)
-                 .bookId()
-                 .metaData(MetaData.builder().bookRank(5).build())
-                 .build(),
-        Book.builder()
-                .title("Alice's Adventures in Wonderland")
-                .language("En")
-                .author("Lewis Carrol")
-                .gunningFog(8.8)
-                .bookId()
-                .metaData(MetaData.builder().bookRank(3).build())
-                .build()
-            ));
+
+
+    private List<Book> books = new ArrayList<>(List.of(
+            Book.builder()
+                    .author("Austen, Jane")
+                    .title("Pride and Prejudice")
+                    .language("En")
+                    .gunningFog(9.0)
+                    .bookId()
+                    .metaData(MetaData.builder().bookRank(5).build())
+                    .build(),
+            Book.builder()
+                    .title("Alice's Adventures in Wonderland")
+                    .language("En")
+                    .author("Lewis Carrol")
+                    .gunningFog(8.8)
+                    .bookId()
+                    .metaData(MetaData.builder().bookRank(3).build())
+                    .build()
+    ));
 
     /**
      * Create
-     * @param tempBook Book object
      *
+     * @param tempBook Book object
      * @return book object
      */
-   
-    public Book addBooks(Book tempBook){
-         tempBook =  Book.builder()
+
+    public Book addBooks(Book tempBook) {
+        tempBook = Book.builder()
                 .title(tempBook.getTitle())
-                 .author(tempBook.getAuthor())
+                .author(tempBook.getAuthor())
                 .bookId()
                 .metaData(tempBook.getMetaData())
                 .build();
@@ -56,19 +60,20 @@ public class BookService {
 
     /**
      * Updates metadata for a book that matches a unique id
+     *
      * @param metaData MetaData object
-     * @param uuid UUID object
+     * @param uuid     UUID object
      * @return Book object
      */
-    public Book updateMeta(MetaData metaData, UUID uuid){
+    public Book updateMeta(MetaData metaData, UUID uuid) {
         Optional<Book> bookFound = books.stream()
                 .filter(book -> book.getBookId().equals(uuid))
                 .findFirst();
-        if (bookFound.isPresent()){
+        if (bookFound.isPresent()) {
             Book book = bookFound.get();
             book.setMetaData(metaData);
             addBooks(book);
-             return book;
+            return book;
         } else {
             return null;
         }
@@ -76,17 +81,19 @@ public class BookService {
 
     /**
      * Read
+     *
      * @return List of books requested by the GET method
      */
-    public List<Book> allBooks(){
+    public List<Book> allBooks() {
         return books;
     }
 
     /**
      * The method returns all metadata from the book collection
+     *
      * @return List of MetaData objects
      */
-    public List<MetaData> getMeta(){
+    public List<MetaData> getMeta() {
         return books.stream()
                 .map(Book::getMetaData)
                 .toList();
@@ -94,15 +101,16 @@ public class BookService {
 
     /**
      * Update a book in the collection that matches an id provided
+     *
      * @param tempBook Book object
      * @return Book object
      */
-    public Book updateBook(Book tempBook){
+    public Book updateBook(Book tempBook) {
         Optional<Book> bookFound = books.stream()
                 .filter(book -> book.getBookId().equals(tempBook.getBookId()))
                 .findFirst();
 
-        if (bookFound.isPresent()){
+        if (bookFound.isPresent()) {
             Book book = bookFound.get();
             book.setAuthor(tempBook.getAuthor());
             book.setTitle(tempBook.getTitle());
@@ -116,16 +124,17 @@ public class BookService {
 
     /**
      * Delete a record from the library
-     * @param tempBook Book Object
+     *
+     * @param tempBookId UUID Object
      */
-    public void deleteBook(Book tempBook){
+    public void deleteBook(UUID tempBookId) {
         books = books.stream()
-                .filter(book -> !book.getBookId().equals(tempBook.getBookId()))
+                .filter(book -> !book.getBookId().equals(tempBookId))
                 .toList();
     }
 
     /**
-     * @param tempBook  Book object to provide the unique ID
+     * @param tempBook Book object to provide the unique ID
      * @return boolean
      */
     public boolean bookExists(Book tempBook) {
@@ -134,10 +143,11 @@ public class BookService {
 
     /**
      * A helper method to verify if the id exists
+     *
      * @param uuid UUID object
      * @return boolean value
      */
-    public boolean idExists(UUID uuid){
+    public boolean idExists(UUID uuid) {
         return books.stream().anyMatch(book -> book.getBookId().equals(uuid));
     }
 
