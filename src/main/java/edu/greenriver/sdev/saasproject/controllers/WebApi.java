@@ -110,8 +110,7 @@ public class WebApi {
             return new ResponseEntity<>("The book title cannot be empty/null", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(service.updateBook(
-                                    tempBook), HttpStatus.OK);
+        return new ResponseEntity<>(service.updateBook(tempBook), HttpStatus.OK);
     }
 
     /**

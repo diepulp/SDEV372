@@ -19,8 +19,6 @@ import java.util.UUID;
  */
 @Service
 public class BookService {
-
-
     private List<Book> books = new ArrayList<>(List.of(
             Book.builder()
                     .author("Austen, Jane")
@@ -51,8 +49,9 @@ public class BookService {
         tempBook = Book.builder()
                 .title(tempBook.getTitle())
                 .author(tempBook.getAuthor())
+                .gunningFog(tempBook.getGunningFog())
                 .bookId()
-                .metaData(tempBook.getMetaData())
+                .metaData(MetaData.builder().bookRank(tempBook.getMetaData().getBookRank()).build())
                 .build();
         books.add(tempBook);
         return tempBook;

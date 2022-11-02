@@ -74,6 +74,14 @@ async function fetchData() {
 
 function createElements(book) {
     let {...rest} = book
+    console.log(arguments)
+
+    let {
+        metaData: {
+            bookRank
+        }
+    } = book
+    console.log(bookRank)
 
     //table tags
     let tableBody = document.querySelector("#books")
@@ -99,13 +107,14 @@ function createElements(book) {
     })
 
 
+
     //supply values for the elements
     buttonLot.appendChild(delButton)
     author.innerText = rest.author
     gunningFog.innerText = rest.gunningFog
     title.innerText = rest.title
     language.innerText = rest.language
-    // metaData.innerText = rest.metaData.bookRank
+    metaData.innerText = rest.metaData.bookRank
     bookId.innerText = rest.bookId
     delButton.innerText = "x"
     delButton.classList.add("del")
@@ -150,8 +159,52 @@ async function handlePost(event) {
     let gunningFog = document.querySelector("#fog-index").value
 
     let fields = [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog]
-    const response = await postData(fields)
-    return response
+    return await postData(fields)
+}
+
+function handlePut(event){
+    let bookTitle = document.querySelector("#edit-title").value
+    let bookAuthor = document.querySelector("#edit-author").value
+    let bookLanguage = document.querySelector("#edit-lang").value
+    let metaData = document.querySelector("#editMeta").value
+    let gunningFog = document.querySelector("#edit-fog").value
+
+    let fields = [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog]
+    return putData(fields)
+}
+
+async function putData(){
+    let [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog] = inputs
+
+    const url = "http://localhost:8080/api/v1/book"
+
+    let jsonObj = {
+        "title": bookTitle,
+        "author": bookAuthor,
+        "language": bookLanguage,
+        "metaData": {
+            "bookRank": parseInt(metaData)
+        },
+        "gunningFog": parseFloat(gunningFog)
+    }
+
+    let param = {
+        method: "put",
+        headers: {
+            "Content-type": "application/json"
+        },
+        body: JSON.stringify(jsonObj)
+    }
+    try {
+        const response = await fetch(url, param)
+        console.log( "put response" + response)
+        const data = await response.json()
+        console.log("data from post response" + data)
+        // const newBook = await response.json()
+        return data
+    } catch (error) {
+        return error
+    }
 }
 
 /**
@@ -176,9 +229,6 @@ async function handlePost(event) {
 async function delData(bookId){
 
     let delUrl = `http://localhost:8080/api/v1/book/delete-book/${bookId}`
-    // let jsonObj = {
-    //     "bookId": bookId
-    // }
 
     let param = {
         method: "delete",
@@ -197,11 +247,10 @@ async function delData(bookId){
 
 /**
  * Configures and sends the post request to the API
- * @param url
  * @param inputs
  * @returns {Promise<any>}
  */
-async function postData( inputs) {
+async function postData(inputs) {
     let [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog] = inputs
 
     const url = "http://localhost:8080/api/v1/book"

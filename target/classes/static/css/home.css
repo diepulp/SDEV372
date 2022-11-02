@@ -6,7 +6,7 @@ body{
 }
 header {
     margin: 1em;
-    grid-column: 1 / span 2;
+    grid-column: 1 / span 3;
     grid-row: 1;
     background-size: cover;
     padding: 3rem;
@@ -35,43 +35,56 @@ h1 {
     grid-row-gap: 0.3em;
     grid-auto-rows: minmax(100px, auto);
     align-items: center;
-    justify-content: space-evenly;
-    flex-direction: column;
 }
 #form-post{
     display: flex;
     flex-direction: column;
     padding: 1rem;
-    grid-column: 2;
-    grid-row: 4;
+    grid-column: 1 / span 1;
+    grid-row: 3;
+}
+
+#form-put {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    grid-column: 2 / span 1;
+    grid-row: 3;
 }
 .container > h1 {
     margin: 10px;
     font-family: "Papyrus", serif;
 }
-/*img {*/
-/*    width: 300px;*/
-/*    height: auto;*/
-/*    object-fit: cover;*/
-/*}*/
 
+#info{
+    grid-column: 1 / span 2;
+    grid-row: 2;
+    margin: 1rem;
+}
 
-#form-post > label {
+ #form-put > label {
     margin: 5px;
     color: #3d376c;
 }
-#submit {
+ #form-post > label {
+     margin: 5px;
+     color: #3d376c;
+ }
+#submit, #submitEdit {
     margin-top: 5px;
+    width: 100px;
+    background-color: #34737b;
+    color: white;
 }
 
 p {
-    font-size: 12px;
+    font-size: 16px;
 }
 
 table {
     width: 100%;
     padding: 1rem;
-    grid-row: 2 / span 2;
+    grid-row: 4 / span 3;
     grid-column: 1 / span 2;
 }
 
