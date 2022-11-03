@@ -51,7 +51,7 @@ public class BookService {
                 .author(tempBook.getAuthor())
                 .gunningFog(tempBook.getGunningFog())
                 .bookId()
-                .metaData(MetaData.builder().bookRank(tempBook.getMetaData().getBookRank()).build())
+                .metaData(tempBook.getMetaData())
                 .build();
         books.add(tempBook);
         return tempBook;

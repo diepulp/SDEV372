@@ -6,7 +6,6 @@ import edu.greenriver.sdev.saasproject.services.BookService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,11 +67,11 @@ public class WebApi {
      * @return ResponseEntity object
      */
     @PutMapping("metadata/update/{id}")
-    public ResponseEntity<Object> updateMeta(@PathVariable("id") UUID bookId, @RequestBody MetaData metadata){
+    public ResponseEntity<Object> updateMeta(@PathVariable("id") UUID bookId, @RequestBody Book metadata){
         if (!service.idExists(bookId)){
             return  new ResponseEntity<>("The book is not found", HttpStatus.NOT_FOUND);
         } else {
-            return  ResponseEntity.ok(service.updateMeta(metadata, bookId));
+            return  ResponseEntity.ok(service.updateMeta(metadata.getMetaData(), bookId));
         }
     }
 
@@ -81,10 +80,7 @@ public class WebApi {
      * @param tempBook Book object
      * @return ResponseEntity object
      */
-    @PostMapping(
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
-    )
+    @PostMapping("")
     public ResponseEntity<Object> addBook(@RequestBody Book tempBook){
         if (tempBook.getTitle().isEmpty() || tempBook.getTitle() == null){
             return new ResponseEntity<>("The book title cannot be empty / null ", HttpStatus.BAD_REQUEST);
@@ -110,7 +106,8 @@ public class WebApi {
             return new ResponseEntity<>("The book title cannot be empty/null", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(service.updateBook(tempBook), HttpStatus.OK);
+        return new ResponseEntity<>(service.updateBook(
+                                    tempBook), HttpStatus.OK);
     }
 
     /**

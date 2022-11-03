@@ -57,6 +57,8 @@ h1 {
 }
 
 #info{
+    display: flex;
+    flex-direction: row;
     grid-column: 1 / span 2;
     grid-row: 2;
     margin: 1rem;
@@ -79,6 +81,9 @@ h1 {
 
 p {
     font-size: 16px;
+    font-family: "Papyrus", serif;
+    color: #34737b;
+    text-align: center;
 }
 
 table {

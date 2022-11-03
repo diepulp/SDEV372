@@ -14,22 +14,20 @@ import java.util.Scanner;
 public class SaasProjectApplication {
 
     public static void main(String[] args) {
-
-
         Scanner scanner;
 
         SpringApplication.run(SaasProjectApplication.class, args);
-        {
-            try {
-                scanner = new Scanner(new File("src/main/java/prog_book/prog_book.csv"));
-                scanner.useDelimiter(",");
-                while(scanner.hasNext()){
-                    System.out.println(scanner.next());
-                }
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        }
+//        {
+//            try {
+//                scanner = new Scanner(new File("src/main/java/prog_book/prog_book.csv"));
+//                scanner.useDelimiter(",");
+//                while(scanner.hasNext()){
+//                    System.out.println(scanner.next());
+//                }
+//            } catch (FileNotFoundException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
 
     }
 }
