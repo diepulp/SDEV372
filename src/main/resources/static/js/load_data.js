@@ -72,7 +72,7 @@ async function fetchGoogleBooks(searchParam) {
 }
 
 function renderBookThumbnail(data){
-    let section = document.querySelector("bookDisplay")
+    let section = document.querySelector("#bookDisplay")
     let { items } = data
     for (const [key, value] of Object.entries(items)){
         console.log(`${key} ${value}`)
@@ -82,9 +82,10 @@ function renderBookThumbnail(data){
             }
         }} = value
         console.log(thumbnail)
-        // let img = document.createElement("img")
-        // img.setAttribute("src", thumbnail)
-        // section.appendChild(img)
+        let img = document.createElement("img")
+        img.setAttribute("src", thumbnail)
+
+        section.appendChild(img)
     }
 }
 
