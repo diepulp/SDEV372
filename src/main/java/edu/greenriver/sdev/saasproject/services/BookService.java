@@ -19,24 +19,7 @@ import java.util.UUID;
  */
 @Service
 public class BookService {
-    private List<Book> books = new ArrayList<>(List.of(
-            Book.builder()
-                    .author("Austen, Jane")
-                    .title("Pride and Prejudice")
-                    .language("En")
-                    .gunningFog(9.0)
-                    .bookId()
-                    .metaData(MetaData.builder().bookRank(5).build())
-                    .build(),
-            Book.builder()
-                    .title("Alice's Adventures in Wonderland")
-                    .language("En")
-                    .author("Lewis Carrol")
-                    .gunningFog(8.8)
-                    .bookId()
-                    .metaData(MetaData.builder().bookRank(3).build())
-                    .build()
-    ));
+    private List<Book> books = new ArrayList<>();
 
     /**
      * Create
@@ -65,12 +48,18 @@ public class BookService {
      * @return Book object
      */
     public Book updateMeta(MetaData metaData, UUID uuid) {
+        MetaData metaDataNew = MetaData
+                .builder()
+                .bookRank(metaData.bookRank)
+                .downloads(metaData.downloads)
+                                       .build();
+
         Optional<Book> bookFound = books.stream()
                 .filter(book -> book.getBookId().equals(uuid))
                 .findFirst();
         if (bookFound.isPresent()) {
             Book book = bookFound.get();
-            book.setMetaData(metaData);
+            book.setMetaData(metaDataNew);
             addBooks(book);
             return book;
         } else {

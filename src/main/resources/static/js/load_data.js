@@ -1,23 +1,46 @@
 /**
  * Front end interactions
  */
+import "./google_api.js"
+
 window.onload = () => {
 
     let submitPost = document.querySelector("#submit")
-    console.log(submitPost)
+    let googleSubmit = document.querySelector("#google-submit")
 
-    let delUrl = "http://localhost:8080/api/v1/book/delete-book"
-    let jsonObj = {
-        "bookId": "7ac5e9ff-d5fb-4e62-9913-"
-    }
-    let paramsDel = paramsInit("DELETE", "application/json", JSON.stringify(jsonObj))
+    googleSubmit.addEventListener("click", (e) => {
+        e.preventDefault()
+        let googleInput = document.querySelector("#google-input").value
 
-    fetch(delUrl, paramsDel).then((res) => {
-        console.log(res)
+        fetchGoogleBooks(googleInput).then((data) => {
+            renderBookThumbnail(data)
+        })
     })
 
+
+    submitPost.addEventListener("click", (e) => {
+        console.log(e)
+    })
+
+
+    // let header = document.querySelector("header")
+
+    //add attributes to variables
+    // header.potato = "potato"
+    // console.log(header.potato)
+
+    // let delUrl = "http://localhost:8080/api/v1/book/delete-book"
+    // let jsonObj = {
+    //     "bookId": "7ac5e9ff-d5fb-4e62-9913-"
+    // }
+    // let paramsDel = paramsInit("DELETE", "application/json", JSON.stringify(jsonObj))
+    //
+    // fetch(delUrl, paramsDel).then((res) => {
+    //     console.log(res)
+    // })
+
     /**
-     * Sends GET request to the API
+     * Sends GET request to the REST API
      */
     fetchData().then(data => {
         renderBooks(data);
@@ -32,10 +55,37 @@ window.onload = () => {
     submitPost.addEventListener("click", (event) => {
         handlePost(event).then((res) => {
             console.log("Response after posting data" + res)
-
             createElements(res)
         })
     })
+}
+
+/**
+ * Google API GET request with a search parameter collected from the input field
+ * @returns {Promise<any>}
+ */
+async function fetchGoogleBooks(searchParam) {
+    let url = `https://www.googleapis.com/books/v1/volumes?q=${searchParam}&key=AIzaSyC1QBZdOW63nyBDbPAoeJZ1YQccA5Y1M8g`
+
+    let response = await fetch(url);
+    return await response.json();
+}
+
+function renderBookThumbnail(data){
+    let section = document.querySelector("bookDisplay")
+    let { items } = data
+    for (const [key, value] of Object.entries(items)){
+        console.log(`${key} ${value}`)
+        let {volumeInfo : {
+            imageLinks: {
+                thumbnail
+            }
+        }} = value
+        console.log(thumbnail)
+        // let img = document.createElement("img")
+        // img.setAttribute("src", thumbnail)
+        // section.appendChild(img)
+    }
 }
 
 /**
@@ -60,9 +110,9 @@ function paramsInit(method = "", appType = "", body = null) {
  */
 async function fetchData() {
     const url = "http://localhost:8080/api/v1/book"
-    const paramsGet = paramsInit("get")
+
     try {
-        const response = await fetch(url, paramsGet)
+        const response = await fetch(url)
         const json = await response.json()
         console.log("Json from fetch data " + json)
         return json
@@ -101,11 +151,12 @@ function createElements(book) {
 
     //attach an event listener to the dynamically added button
     //to invoke the fetch delete call and re-render the layout
-    delButton.addEventListener("click",() =>{
+    delButton.addEventListener("click", () => {
         console.log(`Attribute id ${attributeId}`)
-        handleDel(attributeId)
-    })
+        handleDel(attributeId).then(
 
+        )
+    })
 
 
     //supply values for the elements
@@ -114,7 +165,7 @@ function createElements(book) {
     gunningFog.innerText = rest.gunningFog
     title.innerText = rest.title
     language.innerText = rest.language
-    metaData.innerText = rest.metaData.bookRank
+    metaData.innerText = bookRank
     bookId.innerText = rest.bookId
     delButton.innerText = "x"
     delButton.classList.add("del")
@@ -133,11 +184,11 @@ function createElements(book) {
 }
 
 function renderBooks(data) {
-    try{
+    try {
         data.forEach((book) => {
             createElements(book)
         })
-    } catch (e){
+    } catch (e) {
         console.log(e)
     }
 
@@ -162,7 +213,7 @@ async function handlePost(event) {
     return await postData(fields)
 }
 
-function handlePut(event){
+function handlePut(event) {
     let bookTitle = document.querySelector("#edit-title").value
     let bookAuthor = document.querySelector("#edit-author").value
     let bookLanguage = document.querySelector("#edit-lang").value
@@ -173,7 +224,7 @@ function handlePut(event){
     return putData(fields)
 }
 
-async function putData(){
+async function putData(inputs) {
     let [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog] = inputs
 
     const url = "http://localhost:8080/api/v1/book"
@@ -197,7 +248,7 @@ async function putData(){
     }
     try {
         const response = await fetch(url, param)
-        console.log( "put response" + response)
+        console.log("put response" + response)
         const data = await response.json()
         console.log("data from post response" + data)
         // const newBook = await response.json()
@@ -210,13 +261,13 @@ async function putData(){
 /**
  *
  */
- function handleDel(id){
-   let rowToDelete = document.getElementById(`${id}`)
-    console.log("Row to delete" , rowToDelete)
+async function handleDel(id) {
+    let rowToDelete = document.getElementById(`${id}`)
+    console.log("Row to delete", rowToDelete)
     console.log(`Del fired ${id}`)
     rowToDelete.remove()
-    delData(id).then(() => {
-       console.log("Del request sent")
+    await delData(id).then(() => {
+        console.log("Del request sent")
     })
 
 }
@@ -226,7 +277,7 @@ async function putData(){
  * @param bookId
  * @returns {Promise<any>}
  */
-async function delData(bookId){
+async function delData(bookId) {
 
     let delUrl = `http://localhost:8080/api/v1/book/delete-book/${bookId}`
 
@@ -239,9 +290,9 @@ async function delData(bookId){
     }
 
     try {
-         await fetch(delUrl, param)
-    } catch (error){
-       return error
+        await fetch(delUrl, param)
+    } catch (error) {
+        return "Book could not be found" + error
     }
 }
 
@@ -274,7 +325,7 @@ async function postData(inputs) {
     }
     try {
         const response = await fetch(url, param)
-        console.log( " post response" + response)
+        console.log(" post response" + response)
         const data = await response.json()
         console.log("data from post response" + data)
         // const newBook = await response.json()

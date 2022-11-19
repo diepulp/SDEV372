@@ -67,11 +67,11 @@ public class WebApi {
      * @return ResponseEntity object
      */
     @PutMapping("metadata/update/{id}")
-    public ResponseEntity<Object> updateMeta(@PathVariable("id") UUID bookId, @RequestBody Book metadata){
+    public ResponseEntity<Object> updateMeta(@PathVariable("id") UUID bookId, @RequestBody MetaData metadata){
         if (!service.idExists(bookId)){
             return  new ResponseEntity<>("The book is not found", HttpStatus.NOT_FOUND);
         } else {
-            return  ResponseEntity.ok(service.updateMeta(metadata.getMetaData(), bookId));
+            return  ResponseEntity.ok(service.updateMeta(metadata, bookId));
         }
     }
 
