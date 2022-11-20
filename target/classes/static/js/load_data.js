@@ -5,16 +5,7 @@ import {api_key} from "./google_api.js"
 window.onload = () => {
     console.log(api_key)
     let submitPost = document.querySelector("#submit")
-    let googleSubmit = document.querySelector("#google-submit")
 
-    googleSubmit.addEventListener("click", (e) => {
-        e.preventDefault()
-        let googleInput = document.querySelector("#google-input").value
-
-        fetchGoogleBooks(googleInput, api_key).then((data) => {
-            renderBookThumbnail(data)
-        })
-    })
     console.log(submitPost)
 
     let delUrl = "http://localhost:8080/api/v1/book/delete-book"
@@ -50,6 +41,7 @@ window.onload = () => {
 }
 
 /**
+<<<<<<< HEAD
  * Google API GET request with a search parameter collected from the input field
  * @returns {Promise<any>}
  */
@@ -80,6 +72,8 @@ function renderBookThumbnail(data){
 
 
 /**
+=======
+>>>>>>> parent of a0f4b9d (implements fetch to google API, Closes#11)
  * Parameters for fetch calls
  * @param method
  * @param appType

@@ -6,7 +6,6 @@ body{
 }
 header {
     margin: 1em;
-    border-radius: 5px;
     grid-column: 1 / span 3;
     grid-row: 1;
     background-size: cover;
@@ -26,7 +25,7 @@ h1 {
     text-align: center;
     letter-spacing: -2px;
     font-family: "Papyrus", serif;
-    font-weight: 100;
+    font-weigtht: 100;
     text-transform: lowercase;
     z-index: 2;
     color: #e3bd5b;
@@ -93,21 +92,17 @@ p {
 table {
     width: 100%;
     padding: 1rem;
-    grid-row: 4;
+    grid-row: 4 / span 3;
     grid-column: 1 / span 2;
 }
 
 tr, td, th {
-    border: 1px solid #34737b;
-    background-color: whitesmoke;
+    border: 1px solid #34737b
 }
 
 th, td {
     text-align: left;
     padding: 4px 10px;
-    font-weight: 200;
-    font-family: "Papyrus", serif;
-<<<<<<< Updated upstream
 }
 
 .google-form {
@@ -115,10 +110,6 @@ th, td {
     grid-row: 5;
     display: flex;
     flex-direction: column;
-
-}
-
-=======
 }
 
 .google-form {
@@ -129,21 +120,6 @@ th, td {
 
 }
 
->>>>>>> Stashed changes
-#google-input, input {
-    background-color: whitesmoke;
-    color: grey;
-    cursor: pointer;
-    border-radius: 5px;
-    padding: 5px;
-    margin-bottom: 10px;
-    outline: none;
-    border: 1px solid lightgrey;
-<<<<<<< Updated upstream
-=======
-    width: 300px;
->>>>>>> Stashed changes
-}
 
 h2 {
     font-weight: lighter;
@@ -157,10 +133,7 @@ h2 {
     display: inline;
     width: 100px;
 }
-#google-submit {
-    outline: 0;
-}
-<<<<<<< Updated upstream
+
 
 #bookDisplay {
     grid-row: 6;
@@ -173,7 +146,6 @@ img{
     margin: 5px;
 }
 
-=======
 section {
     grid-row: 6;
     display: flex;
@@ -186,4 +158,3 @@ section {
     margin: 5px;
      flex-grow: 4;
 }
->>>>>>> Stashed changes

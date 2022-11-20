@@ -7,29 +7,32 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/home.css">
     <title>CSBooks</title>
+<<<<<<< HEAD
     <script type="module" src="js/load_data.js"></script>
     <script type="module" src="js/google_api.js"></script>
+=======
+    <script src="js/load_data.js"></script>
+>>>>>>> parent of a0f4b9d (implements fetch to google API, Closes#11)
 </head>
 <body>
 <main id="main">
     <div class="container">
-        <header id="header">
+        <header>
             <h1>Project Gutenberg Book Collection</h1>
         </header>
 
         <section id="info">
             <div>
-                <p>Project Gutenberg (PG) is a volunteer effort to digitize and archive cultural works, to ‘encourage
-                    the creation and distribution of eBooks’. It was founded in 1971 by Michael S. Hart and is the 
-                    oldest digital library. This dataset is a collection of the top 1000 most popular books on Project
-                    Gutenberg, as determined by downloads.</p>
+                <p>Project Gutenberg (PG) is a volunteer effort to digitize and archive cultural works, to ‘encourage the
+                    creation and distribution of eBooks’. It was founded in 1971 by Michael S. Hart and is the oldest
+                    digital library. This dataset is a collection of the top 1000 most popular books on Project Gutenberg,
+                    as determined by downloads.</p>
             </div>
             <div>
                 <p>Each book has information about its authorship, publication date,
-                    congressional classification, and a few other fields. It also has some simple, computed statistics
-                    based
-                    on common metrics such as sentiment analysis, Flesch Kincaid Reading level, and average sentence
-                    length.</p>
+                congressional classification, and a few other fields. It also has some simple, computed statistics based
+                on common metrics such as sentiment analysis, Flesch Kincaid Reading level, and average sentence
+                length.</p>
             </div>
 
         </section>
@@ -51,7 +54,7 @@
         </table>
 
         <form id="form-post" action="#">
-            <div><h3>Add a new book to the collection</h3></div>
+            <div><p><h3>Add a new book to the collection</h3></p></div>
             <label for="book-author">Enter the author</label>
             <input type="text" id="book-author">
 
@@ -71,27 +74,21 @@
 
         </form>
         <form id="form-put" action="#">
-            <div><h3>Edit metadata in the collection</h3></div>
+            <div><p><h3>Edit metadata in the collection</h3></p></div>
 
-            <label for="editMeta">Enter the book rank</label>
+            <label for="meta">Enter the book rank</label>
             <input type="text" id="editMeta">
 
             <button id="submitEdit">Update</button>
-        </form>
 
-        <form class="google-form">
-            <h2>Google Books API</h2>
-            <input type="text" id="google-input" placeholder="Search for books">
-            <button id="google-submit">Search</button>
+
         </form>
-        <section id="bookDisplay"></section>
     </div>
-<!--    <section>-->
-<!--        &lt;!&ndash;/*@thymesVar id="highestIndex" type=""*/&ndash;&gt;-->
-<!--        <div th:text="${highestIndex}"></div>-->
-<!--    </section>-->
+    <section>
+        <!--/*@thymesVar id="highestIndex" type=""*/-->
+        <div th:text="${highestIndex}"></div>
 
-
+    </section>
 
 </main>
 </body>
