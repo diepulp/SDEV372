@@ -1,10 +1,9 @@
 /**
  * Front end interactions
  */
-import "./google_api.js"
+import {api_key} from "./google_api.js";
 
 window.onload = () => {
-
     let submitPost = document.querySelector("#submit")
     let googleSubmit = document.querySelector("#google-submit")
 
@@ -65,7 +64,7 @@ window.onload = () => {
  * @returns {Promise<any>}
  */
 async function fetchGoogleBooks(searchParam) {
-    let url = `https://www.googleapis.com/books/v1/volumes?q=${searchParam}&key=AIzaSyC1QBZdOW63nyBDbPAoeJZ1YQccA5Y1M8g`
+    let url = `https://www.googleapis.com/books/v1/volumes?q=${searchParam}&key=${api_key}`
 
     let response = await fetch(url);
     return await response.json();
@@ -268,7 +267,7 @@ async function handleDel(id) {
     console.log(`Del fired ${id}`)
     rowToDelete.remove()
     await delData(id).then(() => {
-        console.log("Del request sent")
+        fetchData().then(data => renderBooks(data));
     })
 
 }
@@ -286,12 +285,11 @@ async function delData(bookId) {
         method: "delete",
         headers: {
             "Content-type": "application/json"
-        },
-        // body: JSON.stringify(jsonObj)
+        }
     }
 
     try {
-        await fetch(delUrl, param)
+        await fetch(delUrl, param).then(response => console.log(response))
     } catch (error) {
         return "Book could not be found" + error
     }

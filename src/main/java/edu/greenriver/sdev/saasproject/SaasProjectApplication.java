@@ -29,5 +29,6 @@ public class SaasProjectApplication {
 //            }
 //        }
 
+        System.out.println(System.getenv());
     }
 }
