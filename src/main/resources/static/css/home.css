@@ -13,9 +13,12 @@ header {
     padding: 3rem;
     position: relative;
     background: linear-gradient(rgba(0, 0, 0, 0.5),
-                                rgba(0, 0, 0, 0.5)),
+                                  rgba(0, 0, 0, 0.5)),
                                 url("../images/dataset-cover1.jpg");
     z-index: 1;
+    font-weight: 100;
+    border-radius: 5px;
+    color: #e3bd5b;
 
 }
 
@@ -104,6 +107,7 @@ th, td {
     padding: 4px 10px;
     font-weight: 200;
     font-family: "Papyrus", serif;
+<<<<<<< Updated upstream
 }
 
 .google-form {
@@ -114,6 +118,18 @@ th, td {
 
 }
 
+=======
+}
+
+.google-form {
+    grid-column: 1 / span 2;
+    grid-row: 5;
+    display: flex;
+    flex-direction: column;
+
+}
+
+>>>>>>> Stashed changes
 #google-input, input {
     background-color: whitesmoke;
     color: grey;
@@ -123,6 +139,10 @@ th, td {
     margin-bottom: 10px;
     outline: none;
     border: 1px solid lightgrey;
+<<<<<<< Updated upstream
+=======
+    width: 300px;
+>>>>>>> Stashed changes
 }
 
 h2 {
@@ -140,6 +160,7 @@ h2 {
 #google-submit {
     outline: 0;
 }
+<<<<<<< Updated upstream
 
 #bookDisplay {
     grid-row: 6;
@@ -152,3 +173,17 @@ img{
     margin: 5px;
 }
 
+=======
+section {
+    grid-row: 6;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    grid-column: 1 / span 2;
+}
+ img {
+    margin: 5px;
+     flex-grow: 4;
+}
+>>>>>>> Stashed changes
