@@ -20,6 +20,7 @@ import java.util.UUID;
 @Service
 public class BookService {
     private List<Book> books = new ArrayList<>();
+    private String api_key = System.getenv("GOOGLE_BOOK_API");
 
     /**
      * Create
@@ -139,4 +140,7 @@ public class BookService {
         return books.stream().anyMatch(book -> book.getBookId().equals(uuid));
     }
 
+    public List<String> getApiKey(){
+        return List.of(api_key);
+    }
 }

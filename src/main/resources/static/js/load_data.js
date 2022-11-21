@@ -1,10 +1,8 @@
 /**
  * Front end interactions
  */
-import "./google_api.js"
 
 window.onload = () => {
-
     let submitPost = document.querySelector("#submit")
     let googleSubmit = document.querySelector("#google-submit")
 
@@ -12,11 +10,16 @@ window.onload = () => {
         e.preventDefault()
         let googleInput = document.querySelector("#google-input").value
 
-        fetchGoogleBooks(googleInput).then((data) => {
-            renderBookThumbnail(data)
+        getKey().then( async (data) => {
+            let keyArr = await data
+            let [key] = keyArr
+            console.log(key)
+
+            fetchGoogleBooks(googleInput, key).then((data) => {
+                renderBookThumbnail(data)
+            })
         })
     })
-
 
     submitPost.addEventListener("click", (e) => {
         console.log(e)
@@ -46,7 +49,6 @@ window.onload = () => {
         renderBooks(data);
     })
 
-
     /**
      * Functions handles the button click and appends the last fetch
      * object values to the DOM elements
@@ -60,31 +62,55 @@ window.onload = () => {
     })
 }
 
+// async function retrieveKey(data) {
+//     let keyArr = await data
+//     return keyArr
+// }
+
+async function getKey() {
+    const url = "http://localhost:8080/api/v1/book/key"
+    try {
+        // fetch(url)
+        // .then((res) => res.json())
+        // .then(json => console.log(json))
+        const res = await fetch(url, {
+            method: "get",
+            headers: {
+                "Content-type": "application/json"
+            }
+        })
+        return await res.json()
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 /**
  * Google API GET request with a search parameter collected from the input field
  * @returns {Promise<any>}
  */
-async function fetchGoogleBooks(searchParam) {
-    let url = `https://www.googleapis.com/books/v1/volumes?q=${searchParam}&key=AIzaSyC1QBZdOW63nyBDbPAoeJZ1YQccA5Y1M8g`
+async function fetchGoogleBooks(searchParam, key) {
+    let url = `https://www.googleapis.com/books/v1/volumes?q=${searchParam}&key=${key}`
 
     let response = await fetch(url);
     return await response.json();
 }
 
-function renderBookThumbnail(data){
-    let section = document.querySelector("bookDisplay")
-    let { items } = data
-    for (const [key, value] of Object.entries(items)){
+function renderBookThumbnail(data) {
+    let section = document.querySelector("#bookDisplay")
+    let {items} = data
+    for (const [key, value] of Object.entries(items)) {
         console.log(`${key} ${value}`)
-        let {volumeInfo : {
-            imageLinks: {
-                thumbnail
+        let {
+            volumeInfo: {
+                imageLinks: {
+                    thumbnail
+                }
             }
-        }} = value
-        console.log(thumbnail)
-        // let img = document.createElement("img")
-        // img.setAttribute("src", thumbnail)
-        // section.appendChild(img)
+        } = value
+        let img = document.createElement("img")
+        img.setAttribute("src", thumbnail)
+        section.appendChild(img)
     }
 }
 
@@ -110,12 +136,9 @@ function paramsInit(method = "", appType = "", body = null) {
  */
 async function fetchData() {
     const url = "http://localhost:8080/api/v1/book"
-
     try {
         const response = await fetch(url)
-        const json = await response.json()
-        console.log("Json from fetch data " + json)
-        return json
+        return await response.json()
     } catch (err) {
         console.log("fetch data error" + err)
     }
@@ -213,7 +236,7 @@ async function handlePost(event) {
     return await postData(fields)
 }
 
-function handlePut(event) {
+function handlePut() {
     let bookTitle = document.querySelector("#edit-title").value
     let bookAuthor = document.querySelector("#edit-author").value
     let bookLanguage = document.querySelector("#edit-lang").value
