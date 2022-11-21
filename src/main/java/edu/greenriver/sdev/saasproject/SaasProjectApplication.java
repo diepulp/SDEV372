@@ -28,6 +28,7 @@ public class SaasProjectApplication {
 //                throw new RuntimeException(e);
 //            }
 //        }
-
+        //get api from the system environment variables
+//        System.out.println(System.getenv("GOOGLE_BOOK_API"));
     }
 }

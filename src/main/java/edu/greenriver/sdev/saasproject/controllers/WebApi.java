@@ -5,6 +5,7 @@ import edu.greenriver.sdev.saasproject.model.MetaData;
 import edu.greenriver.sdev.saasproject.services.BookService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import java.util.UUID;
 @RequestMapping("api/v1/book")
 public class WebApi {
 
+
     private BookService service;
 
     /**
@@ -41,10 +43,15 @@ public class WebApi {
      */
     @GetMapping("")
     public ResponseEntity<List<Book>> getAllBooks(){
-        if (service.allBooks().isEmpty()){
-            return new ResponseEntity<>(service.allBooks(), HttpStatus.NOT_FOUND);
-        }
+//        if (service.allBooks().isEmpty()){
+//            return new ResponseEntity<>(service.allBooks(), HttpStatus.NOT_FOUND);
+//        }
         return new ResponseEntity<>(service.allBooks(), HttpStatus.OK);
+    }
+
+    @GetMapping("key")
+    public ResponseEntity<List<String>> getApiKey(){
+        return new ResponseEntity<>(service.getApiKey(), HttpStatus.OK);
     }
 
     /**
