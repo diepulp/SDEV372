@@ -24,6 +24,7 @@ import java.util.UUID;
     // @ResponseBody: to return data from each method, not HTML page names
 @RestController
 @RequestMapping("api/v1/book")
+@CrossOrigin(origins="*")
 public class WebApi {
 
 

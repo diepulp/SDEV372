@@ -6,16 +6,26 @@ window.onload = () => {
     let submitPost = document.querySelector("#submit")
     let googleSubmit = document.querySelector("#google-submit")
 
+    let init = {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json"
+        }
+    }
+
+    //on click the call to external API is made
     googleSubmit.addEventListener("click", (e) => {
         e.preventDefault()
         let googleInput = document.querySelector("#google-input").value
 
+        //the API key is collected from the REST API
         getKey().then( async (data) => {
             let keyArr = await data
             let [key] = keyArr
-            console.log(key)
 
-            fetchGoogleBooks(googleInput, key).then((data) => {
+          //the call to Google API with the user input and the retrieved api key
+            fetchGoogleBooks(googleInput, key, init).then((data) => {
                 renderBookThumbnail(data)
             })
         })
@@ -50,7 +60,7 @@ window.onload = () => {
     })
 
     /**
-     * Functions handles the button click and appends the last fetch
+     * Functions handle the button click and appends the last fetch
      * object values to the DOM elements
      */
     //use anonymous function as a wrapper to pass parameters to the event listener
@@ -62,10 +72,6 @@ window.onload = () => {
     })
 }
 
-// async function retrieveKey(data) {
-//     let keyArr = await data
-//     return keyArr
-// }
 
 async function getKey() {
     const url = "http://localhost:8080/api/v1/book/key"
@@ -89,10 +95,10 @@ async function getKey() {
  * Google API GET request with a search parameter collected from the input field
  * @returns {Promise<any>}
  */
-async function fetchGoogleBooks(searchParam, key) {
+async function fetchGoogleBooks(searchParam, key, init) {
     let url = `https://www.googleapis.com/books/v1/volumes?q=${searchParam}&key=${key}`
 
-    let response = await fetch(url);
+    let response = await fetch(url, init);
     return await response.json();
 }
 
@@ -100,17 +106,24 @@ function renderBookThumbnail(data) {
     let section = document.querySelector("#bookDisplay")
     let {items} = data
     for (const [key, value] of Object.entries(items)) {
+        console.log(data)
         console.log(`${key} ${value}`)
         let {
             volumeInfo: {
                 imageLinks: {
                     thumbnail
-                }
+                },
+                previewLink
             }
         } = value
         let img = document.createElement("img")
+        let anchor = document.createElement("a")
+        anchor.setAttribute("class", "anchor")
         img.setAttribute("src", thumbnail)
-        section.appendChild(img)
+        anchor.setAttribute("href", previewLink)
+        anchor.setAttribute("target", "_blank" )
+        anchor.appendChild(img)
+        section.appendChild(anchor)
     }
 }
 
@@ -136,8 +149,15 @@ function paramsInit(method = "", appType = "", body = null) {
  */
 async function fetchData() {
     const url = "http://localhost:8080/api/v1/book"
+    let init = {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json"
+        }
+    }
     try {
-        const response = await fetch(url)
+        const response = await fetch(url, init)
         return await response.json()
     } catch (err) {
         console.log("fetch data error" + err)
