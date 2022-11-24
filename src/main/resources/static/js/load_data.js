@@ -359,8 +359,13 @@ async function postData(inputs) {
         "gunningFog": parseFloat(gunningFog)
     }
 
+    {
+
+    }
+
     let param = {
         method: "post",
+        mode: "cors",
         headers: {
             "Content-type": "application/json"
         },
