@@ -6,6 +6,15 @@ window.onload = async () => {
     let submitPost = document.querySelector("#submit")
     let googleSubmit = document.querySelector("#google-submit")
 
+
+    let init = {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json"
+        }
+    }
+
     //the API key is collected from the REST API
     const key = await getKey().then(async (data) => {
         let keyArr = await data;
@@ -13,7 +22,7 @@ window.onload = async () => {
         return key
     })
 
-    let bookData = await getVolumes(key)
+    let bookData = await getVolumes(key, 2, init)
     let {items} = bookData
     let volumes = []
 
@@ -27,13 +36,6 @@ window.onload = async () => {
     }
     console.log("Books from Volumes array" + volumes)
 
-    let init = {
-        method: "GET",
-        mode: "cors",
-        headers: {
-            "Content-type": "application/json"
-        }
-    }
 
     //on click the call to external API is made
     googleSubmit.addEventListener("click", (e) => {
