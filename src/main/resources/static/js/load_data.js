@@ -6,7 +6,6 @@ window.onload = async () => {
     let submitPost = document.querySelector("#submit")
     let googleSubmit = document.querySelector("#google-submit")
 
-
     let init = {
         method: "GET",
         mode: "cors",
@@ -16,25 +15,25 @@ window.onload = async () => {
     }
 
     //the API key is collected from the REST API
-    const key = await getKey().then(async (data) => {
+    const apiKey = await getKey().then(async (data) => {
         let keyArr = await data;
         let [key] = keyArr
         return key
     })
 
-    let bookData = await getVolumes(key, 2, init)
-    let {items} = bookData
-    let volumes = []
-
-    for (const [key, value] of Object.entries(items)) {
-        let {
-            volumeInfo: {
-                title
-            }
-        } = value
-        volumes.push(title)
-    }
-    console.log("Books from Volumes array" + volumes)
+    // let bookData = await getVolumes(key, 2, init)
+    // let {items} = bookData
+    // let volumes = []
+    //
+    // for (const [key, value] of Object.entries(items)) {
+    //     let {
+    //         volumeInfo: {
+    //             title
+    //         }
+    //     } = value
+    //     volumes.push(title)
+    // }
+    // console.log("Books from Volumes array" + volumes)
 
 
     //on click the call to external API is made
@@ -42,13 +41,13 @@ window.onload = async () => {
         e.preventDefault()
         let googleInput = document.querySelector("#google-input").value
 
-        fetchGoogleBooks(googleInput, key, init).then((data) => {
+        fetchGoogleBooks(googleInput, apiKey, init).then((data) => {
             renderBookThumbnail(data)
         })
     })
 
-    fetchPublicBookShelves(key, init).then((data) => {
-        renderBookShelves(data, volumes);
+    fetchPublicBookShelves(apiKey, init).then((data) => {
+        renderBookShelves(data,apiKey);
     })
 
     /**
@@ -57,8 +56,8 @@ window.onload = async () => {
      * @param init
      * @returns {Promise<any>}
      */
-    async function fetchPublicBookShelves(key, init) {
-        let url = `https://www.googleapis.com/books/v1/users/109560370875353725212/bookshelves/?key=${key}`
+    async function fetchPublicBookShelves(apiKey, init) {
+        let url = `https://www.googleapis.com/books/v1/users/109560370875353725212/bookshelves/?key=${apiKey}`
 
         let res = await fetch(url, init);
         return await res.json()
@@ -86,21 +85,56 @@ window.onload = async () => {
 
 }//end of window.onload
 
-function renderBookShelves(data, volumes) {
-    let {items} = data;
+async function renderVolumes(apiKey, id){
+    let bookData = await getVolumes(apiKey,id)
+    console.log(bookData)
+    let {items} = bookData
+    console.log(`Items from render volumes ${items}`)
+    let volumes = []
 
-    console.log(`Volumes from the outer ${volumes}`)
+    for (const [key, value] of Object.entries(items)) {
+        let {
+            volumeInfo: {
+                title
+            }
+        } = value
+        volumes.push(title)
+    }
+    console.log("Books from Volumes array" + volumes)
+    return volumes
+}
+async function renderBookShelves(data, apiKey) {
+    let {items} = data;
+    console.log(items)
     let shelvesSection = document.querySelector("#book__shelves")
+
+    //list of public shelves
     let shelvesList = document.createElement("ul")
-    let volume = document.createElement("ul")
+    let volumeList = document.createElement("ul")
+    shelvesList.setAttribute("id", "list_shelves")
+
+
     for (const [key, value] of Object.entries(items)) {
         let {title, id} = value
-        let shelf = document.createElement("li")
+        let shelfItem = document.createElement("li")
+        shelfItem.setAttribute("class", `shelf_item_${title}`)
 
-        shelf.innerText = title
-        shelvesList.appendChild(shelf)
+        let shelfVolume = document.createElement("li")
+
+        let volumes = await renderVolumes(apiKey, id)
+        for (const volume of volumes){
+            console.log(volume)
+            shelfVolume.innerText = volume //shelf volume li
+
+        }
+        volumeList.appendChild(shelfVolume)
+        shelfItem.appendChild(volumeList)
+        shelvesList.appendChild(volumeList)
+        shelfItem.innerText = title
+        shelvesList.appendChild(shelfItem)
+
+        shelvesSection.appendChild(shelvesList)
     }
-    shelvesSection.appendChild(shelvesList)
 }
 
 /**
@@ -127,20 +161,25 @@ async function getKey() {
  * Google API GET request with a search parameter collected from the input field
  * @returns {Promise<any>}
  */
-async function fetchGoogleBooks(searchParam, key, init) {
-    let url = `https://www.googleapis.com/books/v1/volumes?q=${searchParam}&orderBy=newest&key=${key}`
+async function fetchGoogleBooks(searchParam, apiKey, init) {
+    let url = `https://www.googleapis.com/books/v1/volumes?q=${searchParam}&orderBy=newest&key=${apiKey}`
     let response = await fetch(url, init);
     return await response.json();
 }
 
-async function getVolumes(key, param = 0, init) {
-    let url = `https://www.googleapis.com/books/v1/users/109560370875353725212/bookshelves/${param}/volumes?key=${key}`
-    let res = await fetch(url, init)
+async function getVolumes(apiKey, param = 0, init) {
+    let url = `https://www.googleapis.com/books/v1/users/109560370875353725212/bookshelves/${param}/volumes?key=${apiKey}`
+    let res = await fetch(url, {
+        method: "GET",
+        mode: "cors",
+        headers: {
+            "Content-type": "application/json"
+        }})
     return await res.json()
 }
 
-async function fetchAuthor(author, key, init) {
-    let url = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${author}&key=${key}`
+async function fetchAuthor(author, apiKey, init) {
+    let url = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${author}&key=${apiKey}`
     const res = await fetch(url)
     return await res.json();
 }
@@ -149,8 +188,6 @@ function renderBookThumbnail(data) {
     let section = document.querySelector("#bookDisplay")
     let {items} = data
     for (const [key, value] of Object.entries(items)) {
-        console.log(data)
-        console.log(`Key ${key} Value ${value}`)
         let {
             volumeInfo: {
                 imageLinks: {

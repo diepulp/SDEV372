@@ -138,11 +138,11 @@ th, td {
     grid-column: 2;
 }
 ul {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-around;
+    /*display: flex;*/
+    /*flex-direction: row-reverse;*/
+    /*justify-content: space-around;*/
 }
-ul > li {
+#list_shelves > li {
     font-family: "Papyrus", serif;
     list-style: none;
     text-decoration: underline;
