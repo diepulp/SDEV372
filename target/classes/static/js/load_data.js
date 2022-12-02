@@ -1,11 +1,11 @@
 /**
- * Front end interactions
- */
+* Front end interactions
+*/
+import { apiKey } from "./google_api.js"
 
 window.onload = async () => {
     let submitPost = document.querySelector("#submit")
     let googleSubmit = document.querySelector("#google-submit")
-
     let init = {
         method: "GET",
         mode: "cors",
@@ -15,26 +15,14 @@ window.onload = async () => {
     }
 
     //the API key is collected from the REST API
-    const apiKey = await getKey().then(async (data) => {
-        let keyArr = await data;
-        let [key] = keyArr
-        return key
-    })
+    // but throws a server error when deployed
+    // as the system env variable becomes unavalable
 
-    // let bookData = await getVolumes(key, 2, init)
-    // let {items} = bookData
-    // let volumes = []
-    //
-    // for (const [key, value] of Object.entries(items)) {
-    //     let {
-    //         volumeInfo: {
-    //             title
-    //         }
-    //     } = value
-    //     volumes.push(title)
-    // }
-    // console.log("Books from Volumes array" + volumes)
-
+    // const apiKey = await getKey().then(async (data) => {
+    //     let keyArr = await data;
+    //     let [key] = keyArr
+    //     return key
+    // })
 
     //on click the call to external API is made
     googleSubmit.addEventListener("click", (e) => {
@@ -51,8 +39,8 @@ window.onload = async () => {
     })
 
     /**
-     * Retrieves a list of public book shelves for a user authorized with given API key
-     * @param key
+     * Retrieves a list of public bookshelves for a user authorized with given API key
+     * @param apiKey
      * @param init
      * @returns {Promise<any>}
      */
@@ -65,7 +53,7 @@ window.onload = async () => {
 
 
     /**
-     * Sends GET request to the REST API and retrives a list of books stored in the DB
+     * Sends GET request to the REST API and retrieves a list of books stored in the DB
      */
     fetchData().then(data => {
         renderBooks(data);
@@ -142,7 +130,8 @@ async function renderBookShelves(data, apiKey) {
  * @returns {Promise<any>}
  */
 async function getKey() {
-    const url = "http://localhost:8080/api/v1/book/key"
+    // const url = "http://localhost:8080/api/v1/book/key"
+    const url = `${window.location.origin}/api/v1/book/key`
     try {
         const res = await fetch(url, {
             method: "get",
@@ -167,7 +156,7 @@ async function fetchGoogleBooks(searchParam, apiKey, init) {
     return await response.json();
 }
 
-async function getVolumes(apiKey, param = 0, init) {
+async function getVolumes(apiKey, param = 0) {
     let url = `https://www.googleapis.com/books/v1/users/109560370875353725212/bookshelves/${param}/volumes?key=${apiKey}`
     let res = await fetch(url, {
         method: "GET",
@@ -176,12 +165,6 @@ async function getVolumes(apiKey, param = 0, init) {
             "Content-type": "application/json"
         }})
     return await res.json()
-}
-
-async function fetchAuthor(author, apiKey, init) {
-    let url = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${author}&key=${apiKey}`
-    const res = await fetch(url)
-    return await res.json();
 }
 
 function renderBookThumbnail(data) {
@@ -224,7 +207,8 @@ function renderBookThumbnail(data) {
  * @returns {Promise<any>}
  */
 async function fetchData() {
-    const url = "http://localhost:8080/api/v1/book"
+    // const url = "http://localhost:8080/api/v1/book"
+    const url = `${window.location.origin}api/v2/data`
     let init = {
         method: "GET",
         mode: "cors",
@@ -345,7 +329,8 @@ function handlePut() {
 async function putData(inputs) {
     let [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog] = inputs
 
-    const url = "http://localhost:8080/api/v1/book"
+    // const url = "http://localhost:8080/api/v1/book"
+    const url = `${window.location.origin}/api/v1/book`
 
     let jsonObj = {
         "title": bookTitle,
@@ -403,7 +388,7 @@ async function handleDel(id) {
  */
 async function delData(bookId) {
 
-    let delUrl = `http://localhost:8080/api/v1/book/delete-book/${bookId}`
+    let delUrl = `${window.location.origin}/api/v1/book/delete-book/${bookId}`
 
     let param = {
         method: "delete"
@@ -424,7 +409,8 @@ async function delData(bookId) {
 async function postData(inputs) {
     let [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog] = inputs
 
-    const url = "http://localhost:8080/api/v1/book"
+    // const url = "http://localhost:8080/api/v1/book"
+    const url = `${window.location.origin}/api/v1/book`
 
     let jsonObj = {
         "title": bookTitle,
@@ -454,20 +440,5 @@ async function postData(inputs) {
     } catch (error) {
         return error
     }
-    // let header = document.querySelector("header")
-
-    // add attributes to variables
-    // header.potato = "potato"
-    // console.log(header.potato)
-
-    // let delUrl = "http://localhost:8080/api/v1/book/delete-book"
-    // let jsonObj = {
-    //     "bookId": "7ac5e9ff-d5fb-4e62-9913-"
-    // }
-    // let paramsDel = paramsInit("DELETE", "application/json", JSON.stringify(jsonObj))
-    //
-    // fetch(delUrl, {method: "delete"}).then((res) => {
-    //     console.log(res)
-    // })
 
 }

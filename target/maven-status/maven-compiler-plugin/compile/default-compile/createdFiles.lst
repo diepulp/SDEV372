@@ -1,0 +1,8 @@
+edu\greenriver\sdev\saasproject\model\MetaData.class
+edu\greenriver\sdev\saasproject\model\MetaData$MetaDataBuilder.class
+edu\greenriver\sdev\saasproject\bootstrap\CsvConverter.class
+edu\greenriver\sdev\saasproject\controllers\WebApi.class
+edu\greenriver\sdev\saasproject\model\Book.class
+edu\greenriver\sdev\saasproject\SaasProjectApplication.class
+edu\greenriver\sdev\saasproject\services\BookService.class
+edu\greenriver\sdev\saasproject\model\Book$BookBuilder.class

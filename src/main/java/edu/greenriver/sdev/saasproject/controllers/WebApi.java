@@ -20,13 +20,11 @@ import java.util.UUID;
  * @version 1
  * @author  Vladimir Ivanov
  */
-    // @Controller: to respond to HTTP requests
-    // @ResponseBody: to return data from each method, not HTML page names
+ 
 @RestController
 @RequestMapping("api/v1/book")
 @CrossOrigin(origins="*")
 public class WebApi {
-
 
     private BookService service;
 

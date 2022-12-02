@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: saas-pod
+  labels:
+    chapter: services
+spec:
+  containers:
+    - name: first-api-container
+      image: diepulp/saas-api
+      ports:
+        - containerPort: 8080
