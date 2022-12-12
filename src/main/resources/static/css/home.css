@@ -1,141 +1,143 @@
-
-body{
-    background-color: lightgray;
-    width: 960px;
-    margin: 0 auto;
+body {
+  background-color: lightgray;
+  width: 960px;
+  margin: 0 auto;
 }
 header {
-    margin: 1em;
-    border-radius: 5px;
-    grid-column: 1 / span 3;
-    grid-row: 1;
-    background-size: cover;
-    padding: 3rem;
-    position: relative;
-    background: linear-gradient(rgba(0, 0, 0, 0.5),
-                                rgba(0, 0, 0, 0.5)),
-                                url("../images/dataset-cover1.jpg");
-    z-index: 1;
-
+  margin: 1em;
+  border-radius: 5px;
+  grid-column: 1 / span 3;
+  grid-row: 1;
+  background-size: cover;
+  padding: 3rem;
+  position: relative;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url("../images/dataset-cover1.jpg");
+  z-index: 1;
 }
 
 h1 {
-    text-align: center;
-    letter-spacing: -2px;
-    font-family: "Papyrus", serif;
-    font-weight: 100;
-    text-transform: lowercase;
-    z-index: 2;
-    color: #e3bd5b;
+  text-align: center;
+  letter-spacing: -2px;
+  font-family: "Papyrus", serif;
+  font-weight: 100;
+  text-transform: lowercase;
+  z-index: 2;
+  color: #e3bd5b;
 }
 h2 {
-    color: black;
-    font-family: "Papyrus", Serif;
-    grid-row: 5;
-    grid-column: 1 / span 2;
-    text-align: center;
-    font-weight: lighter;
+  color: black;
+  font-family: "Papyrus", Serif;
+  grid-row: 5;
+  grid-column: 1 / span 2;
+  text-align: center;
+  font-weight: lighter;
 }
 
 .container {
-    display: grid;
-    grid-template-columns: 2fr 2fr;
-    grid-column-gap: 0.3em;
-    grid-row-gap: 0.3em;
-    grid-auto-rows: minmax(100px, auto);
-    align-items: center;
+  display: grid;
+  grid-template-columns: 2fr 2fr;
+  grid-column-gap: 0.3em;
+  grid-row-gap: 0.3em;
+  grid-auto-rows: minmax(100px, auto);
+  align-items: center;
 }
-#form-post{
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    grid-column: 1 / span 1;
-    grid-row: 3;
+#form-post {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  grid-column: 1 / span 1;
+  grid-row: 3;
 }
 
 #form-put {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    grid-column: 2 / span 1;
-    grid-row: 3;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  grid-column: 2 / span 1;
+  grid-row: 3;
 }
 .container > h1 {
-    margin: 10px;
-    font-family: "Papyrus", serif;
+  margin: 10px;
+  font-family: "Papyrus", serif;
 }
 
-#info{
-    display: flex;
-    flex-direction: row;
-    grid-column: 1 / span 2;
-    grid-row: 2;
-    margin: 1rem;
+#info {
+  display: flex;
+  flex-direction: row;
+  grid-column: 1 / span 2;
+  grid-row: 2;
+  margin: 1rem;
 }
 
- #form-put > label {
-    margin: 5px;
-    color: #3d376c;
+#form-put > label {
+  margin: 5px;
+  color: #3d376c;
 }
- #form-post > label {
-     margin: 5px;
-     color: #3d376c;
- }
-#submit, #submitEdit {
-    margin-top: 5px;
-    width: 100px;
-    background-color: #34737b;
-    color: white;
+#form-post > label {
+  margin: 5px;
+  color: #3d376c;
+}
+#submit,
+#submitEdit {
+  margin-top: 5px;
+  width: 100px;
+  background-color: #34737b;
+  color: white;
 }
 
 p {
-    font-size: 16px;
-    font-family: "Papyrus", serif;
-    color: #34737b;
-    text-align: center;
+  font-size: 16px;
+  font-family: "Papyrus", serif;
+  color: #34737b;
+  text-align: center;
 }
 
 table {
-    width: 100%;
-    padding: 1rem;
-    grid-row: 4;
-    grid-column: 1 / span 2;
+  width: 100%;
+  padding: 1rem;
+  grid-row: 4;
+  grid-column: 1 / span 2;
 }
 
-tr, td, th {
-    border: 1px solid #34737b;
-    background-color: whitesmoke;
+tr,
+td,
+th {
+  border: 1px solid #34737b;
+  background-color: whitesmoke;
 }
 
-th, td {
-    text-align: left;
-    padding: 4px 10px;
-    font-weight: 200;
-    font-family: "Papyrus", serif;
+th,
+td {
+  text-align: left;
+  padding: 4px 10px;
+  font-weight: 200;
+  font-family: "Papyrus", serif;
 }
 
 .google-form {
-    grid-column: 1;
-    grid-row: 6;
-    display: flex;
-    flex-direction: column;
+  grid-column: 1;
+  grid-row: 6;
+  display: flex;
+  flex-direction: column;
 }
 
-#google-input, input {
-    background-color: whitesmoke;
-    color: grey;
-    cursor: pointer;
-    border-radius: 5px;
-    padding: 5px;
-    margin-bottom: 10px;
-    outline: none;
-    border: 1px solid lightgrey;
-    width: 300px;
+#google-input,
+input {
+  background-color: whitesmoke;
+  color: grey;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 5px;
+  margin-bottom: 10px;
+  outline: none;
+  border: 1px solid lightgrey;
+  width: 300px;
 }
 
 #book__shelves {
-    grid-row: 6;
-    grid-column: 2;
+  grid-row: 6;
+  grid-column: 2;
 }
 /*ul {*/
 /*    display: flex;*/
@@ -143,50 +145,48 @@ th, td {
 /*    justify-content: space-around;*/
 /*}*/
 #list_shelves > li {
-    font-family: "Papyrus", serif;
-    list-style: none;
-    text-decoration: underline;
-    font-size: 1.3rem;
-    margin: 4px;
+  font-family: "Papyrus", serif;
+  list-style: none;
+  text-decoration: underline;
+  font-size: 1.3rem;
+  margin: 4px;
 }
 #google-submit {
-    margin-bottom: 10px;
-    background-color: whitesmoke;
-    font-family: "Papyrus", serif;
-    border-radius: 5px;
-    cursor: pointer;
-    display: inline;
-    width: 100px;
-    border: 1px solid grey;
+  margin-bottom: 10px;
+  background-color: whitesmoke;
+  font-family: "Papyrus", serif;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline;
+  width: 100px;
+  border: 1px solid grey;
 }
 /*#google-submit {*/
 /*    outline: 0;*/
 /*}*/
 #bookDisplay {
-    grid-row: 7;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    grid-column: 1 / span 2;
+  grid-row: 7;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  grid-column: 1 / span 2;
 }
- img {
-    margin: 16px;
-    flex-grow: 4;
+img {
+  margin: 16px;
+  flex-grow: 4;
 }
 
 label {
-    margin-bottom: 5px;
-    font-family: "Papyrus", serif;
+  margin-bottom: 5px;
+  font-family: "Papyrus", serif;
 }
 
-.addBook{
-    color: #34737b;
-    background-color: whitesmoke;
+.addBook {
+  color: #34737b;
+  background-color: whitesmoke;
 }
 
 .book-container {
-    margin: 5px;
+  margin: 5px;
 }
-
-

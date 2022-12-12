@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-SaasProjectApplication<saas-project>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "edu.greenriver.sdev.saasproject.SaasProjectApplication",
+      "projectName": "saas-project",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

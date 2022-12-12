@@ -14,6 +14,8 @@ window.onload = async () => {
         }
     }
 
+    console.log("Api key: " + apiKey)
+
     //the API key is collected from the REST API
     // but throws a server error when deployed
     // as the system env variable becomes unavalable
@@ -104,6 +106,7 @@ async function renderBookShelves(data, apiKey) {
 
     for (const [key, value] of Object.entries(items)) {
         let {title, id} = value
+        console.log(`Ids are: ${id}`)
         let shelfItem = document.createElement("li")
         shelfItem.setAttribute("class", `shelf_item_${title}`)
 
@@ -152,6 +155,7 @@ async function getKey() {
  */
 async function fetchGoogleBooks(searchParam, apiKey, init) {
     let url = `https://www.googleapis.com/books/v1/volumes?q=${searchParam}&orderBy=newest&key=${apiKey}`
+    console.log(apiKey)
     let response = await fetch(url, init);
     return await response.json();
 }
