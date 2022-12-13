@@ -24,5 +24,6 @@ hs_err_pid*
 oauth/
 
 # env var
-# src/main/resources/static/js/google_api.js
+
+src/main/resources/static/js/google_api.js
 google_api.js
