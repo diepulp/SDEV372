@@ -1,131 +1,125 @@
 /**
-* Front end interactions
-*/
-import { apiKey } from "./google_api.js"
+ * Front end interactions
+ */
+import { apiKey } from "./google_api.js";
 
 window.onload = async () => {
-    let submitPost = document.querySelector("#submit")
-    let googleSubmit = document.querySelector("#google-submit")
-    let init = {
-        method: "GET",
-        mode: "cors",
-        headers: {
-            "Content-type": "application/json"
-        }
-    }
+  let submitPost = document.querySelector("#submit");
+  let googleSubmit = document.querySelector("#google-submit");
+  let init = {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      "Content-type": "application/json",
+    },
+  };
 
-    console.log("Api key: " + apiKey)
+  console.log("Api key: " + apiKey);
 
-    //the API key is collected from the REST API
-    // but throws a server error when deployed
-    // as the system env variable becomes unavalable
+  //the API key is collected from the REST API
+  // but throws a server error when deployed
+  // as the system env variable becomes unavalable
 
-    // const apiKey = await getKey().then(async (data) => {
-    //     let keyArr = await data;
-    //     let [key] = keyArr
-    //     return key
-    // })
+  // const apiKey = await getKey().then(async (data) => {
+  //     let keyArr = await data;
+  //     let [key] = keyArr
+  //     return key
+  // })
 
-    //on click the call to external API is made
-    googleSubmit.addEventListener("click", (e) => {
-        e.preventDefault()
-        let googleInput = document.querySelector("#google-input").value
+  //on click the call to external API is made
+  googleSubmit.addEventListener("click", (e) => {
+    e.preventDefault();
+    let googleInput = document.querySelector("#google-input").value;
 
-        fetchGoogleBooks(googleInput, apiKey, init).then((data) => {
-            renderBookThumbnail(data)
-        })
-    })
+    fetchGoogleBooks(googleInput, apiKey, init).then((data) => {
+      renderBookThumbnail(data);
+    });
+  });
 
-    fetchPublicBookShelves(apiKey, init).then((data) => {
-        renderBookShelves(data,apiKey);
-    })
+  fetchPublicBookShelves(apiKey, init).then((data) => {
+    renderBookShelves(data, apiKey);
+  });
 
-    /**
-     * Retrieves a list of public bookshelves for a user authorized with given API key
-     * @param apiKey
-     * @param init
-     * @returns {Promise<any>}
-     */
-    async function fetchPublicBookShelves(apiKey, init) {
-        let url = `https://www.googleapis.com/books/v1/users/109560370875353725212/bookshelves/?key=${apiKey}`
+  /**
+   * Retrieves a list of public bookshelves for a user authorized with given API key
+   * @param apiKey
+   * @param init
+   * @returns {Promise<any>}
+   */
+  async function fetchPublicBookShelves(apiKey, init) {
+    let url = `https://www.googleapis.com/books/v1/users/109560370875353725212/bookshelves/?key=${apiKey}`;
 
-        let res = await fetch(url, init);
-        return await res.json()
-    }
+    let res = await fetch(url, init);
+    return await res.json();
+  }
 
+  /**
+   * Sends GET request to the REST API and retrieves a list of books stored in the DB
+   */
+  fetchData().then((data) => {
+    renderBooks(data);
+  });
 
-    /**
-     * Sends GET request to the REST API and retrieves a list of books stored in the DB
-     */
-    fetchData().then(data => {
-        renderBooks(data);
-    })
+  /**
+   * Functions handle the button click and appends the last fetch
+   * object values to the DOM elements
+   */
+  //use anonymous function as a wrapper to pass parameters to the event listener
+  submitPost.addEventListener("click", (event) => {
+    handlePost(event).then((res) => {
+      console.log("Response after posting data" + res);
+      createElements(res);
+    });
+  });
+}; //end of window.onload
 
-    /**
-     * Functions handle the button click and appends the last fetch
-     * object values to the DOM elements
-     */
-    //use anonymous function as a wrapper to pass parameters to the event listener
-    submitPost.addEventListener("click", (event) => {
-        handlePost(event).then((res) => {
-            console.log("Response after posting data" + res)
-            createElements(res)
-        })
-    })
+async function renderVolumes(apiKey, id) {
+  let bookData = await getVolumes(apiKey, id);
+  console.log(bookData);
+  let { items } = bookData;
+  console.log(`Items from render volumes ${items}`);
+  let volumes = [];
 
-}//end of window.onload
-
-async function renderVolumes(apiKey, id){
-    let bookData = await getVolumes(apiKey,id)
-    console.log(bookData)
-    let {items} = bookData
-    console.log(`Items from render volumes ${items}`)
-    let volumes = []
-
-    for (const [key, value] of Object.entries(items)) {
-        let {
-            volumeInfo: {
-                title
-            }
-        } = value
-        volumes.push(title)
-    }
-    console.log("Books from Volumes array" + volumes)
-    return volumes
+  for (const [key, value] of Object.entries(items)) {
+    let {
+      volumeInfo: { title },
+    } = value;
+    volumes.push(title);
+  }
+  console.log("Books from Volumes array" + volumes);
+  return volumes;
 }
 async function renderBookShelves(data, apiKey) {
-    let {items} = data;
-    console.log(items)
-    let shelvesSection = document.querySelector("#book__shelves")
+  let { items } = data;
+  console.log(items);
+  let shelvesSection = document.querySelector("#book__shelves");
 
-    //list of public shelves
-    let shelvesList = document.createElement("ul")
-    let volumeList = document.createElement("ul")
-    shelvesList.setAttribute("id", "list_shelves")
+  //list of public shelves
+  let shelvesList = document.createElement("ul");
+  let volumeList = document.createElement("ul");
+  shelvesList.setAttribute("id", "list_shelves");
 
+  for (const [key, value] of Object.entries(items)) {
+    let { title, id } = value;
+    console.log(`Ids are: ${id}`);
+    let shelfItem = document.createElement("li");
+    shelfItem.setAttribute("class", `shelf_item_${title}`);
 
-    for (const [key, value] of Object.entries(items)) {
-        let {title, id} = value
-        console.log(`Ids are: ${id}`)
-        let shelfItem = document.createElement("li")
-        shelfItem.setAttribute("class", `shelf_item_${title}`)
+    let shelfVolume = document.createElement("li");
 
-        let shelfVolume = document.createElement("li")
-
-        let volumes = await renderVolumes(apiKey, id)
-        for (const volume of volumes){
-            console.log(volume)
-            shelfVolume.innerText = volume //shelf volume li
-
-        }
-        volumeList.appendChild(shelfVolume)
-        shelfItem.appendChild(volumeList)
-        shelvesList.appendChild(volumeList)
-        shelfItem.innerText = title
-        shelvesList.appendChild(shelfItem)
-
-        shelvesSection.appendChild(shelvesList)
+    let volumes = await renderVolumes(apiKey, id);
+    for (const volume of volumes) {
+      console.log(volume);
+      shelfVolume.innerText = volume; //shelf volume li
     }
+    volumeList.appendChild(shelfVolume);
+    shelfItem.appendChild(volumeList);
+    shelvesList.appendChild(volumeList);
+    shelfItem.innerText = title;
+    shelvesList.appendChild(shelfItem);
+
+    shelvesSection.appendChild(shelvesList);
+  }
 }
 
 /**
@@ -133,20 +127,20 @@ async function renderBookShelves(data, apiKey) {
  * @returns {Promise<any>}
  */
 async function getKey() {
-    // const url = "http://localhost:8080/api/v1/book/key"
-    const url = `${window.location.origin}/api/v1/book/key`
-    try {
-        const res = await fetch(url, {
-            method: "get",
-            mode: "cors",
-            headers: {
-                "Content-type": "application/json"
-            }
-        })
-        return await res.json()
-    } catch (e) {
-        console.log(e)
-    }
+  // const url = "http://localhost:8080/api/v1/book/key"
+  const url = `${window.location.origin}/api/v1/book/key`;
+  try {
+    const res = await fetch(url, {
+      method: "get",
+      mode: "cors",
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+    return await res.json();
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 /**
@@ -154,55 +148,54 @@ async function getKey() {
  * @returns {Promise<any>}
  */
 async function fetchGoogleBooks(searchParam, apiKey, init) {
-    let url = `https://www.googleapis.com/books/v1/volumes?q=${searchParam}&orderBy=newest&key=${apiKey}`
-    console.log(apiKey)
-    let response = await fetch(url, init);
-    return await response.json();
+  let url = `https://www.googleapis.com/books/v1/volumes?q=${searchParam}&orderBy=newest&key=${apiKey}`;
+  console.log(apiKey);
+  let response = await fetch(url, init);
+  return await response.json();
 }
 
 async function getVolumes(apiKey, param = 0) {
-    let url = `https://www.googleapis.com/books/v1/users/109560370875353725212/bookshelves/${param}/volumes?key=${apiKey}`
-    let res = await fetch(url, {
-        method: "GET",
-        mode: "cors",
-        headers: {
-            "Content-type": "application/json"
-        }})
-    return await res.json()
+  let url = `https://www.googleapis.com/books/v1/users/109560370875353725212/bookshelves/${param}/volumes?key=${apiKey}`;
+  let res = await fetch(url, {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      "Content-type": "application/json",
+    },
+  });
+  return await res.json();
 }
 
 function renderBookThumbnail(data) {
-    let section = document.querySelector("#bookDisplay")
-    let {items} = data
-    for (const [key, value] of Object.entries(items)) {
-        let {
-            volumeInfo: {
-                imageLinks: {
-                    thumbnail
-                },
-                previewLink
-            }
-        } = value
-        let img = document.createElement("img")
-        let anchor = document.createElement("a")
-        let addBookButton = document.createElement("div")
-        let bookContainer = document.createElement("button")
+  let section = document.querySelector("#bookDisplay");
+  let { items } = data;
+  for (const [key, value] of Object.entries(items)) {
+    let {
+      volumeInfo: {
+        imageLinks: { thumbnail },
+        previewLink,
+      },
+    } = value;
+    let img = document.createElement("img");
+    let anchor = document.createElement("a");
+    let addBookButton = document.createElement("div");
+    let bookContainer = document.createElement("button");
 
-        addBookButton.innerText = "+"
+    addBookButton.innerText = "+";
 
-        img.setAttribute("src", thumbnail)
-        addBookButton.setAttribute("class", "addBook")
+    img.setAttribute("src", thumbnail);
+    addBookButton.setAttribute("class", "addBook");
 
-        anchor.setAttribute("class", "anchor")
-        anchor.setAttribute("href", previewLink)
-        anchor.setAttribute("target", "_blank")
-        anchor.appendChild(img)
+    anchor.setAttribute("class", "anchor");
+    anchor.setAttribute("href", previewLink);
+    anchor.setAttribute("target", "_blank");
+    anchor.appendChild(img);
 
-        bookContainer.appendChild(anchor)
-        bookContainer.appendChild(addBookButton)
-        bookContainer.setAttribute("class", "book-container")
-        section.appendChild(bookContainer)
-    }
+    bookContainer.appendChild(anchor);
+    bookContainer.appendChild(addBookButton);
+    bookContainer.setAttribute("class", "book-container");
+    section.appendChild(bookContainer);
+  }
 }
 
 /**
@@ -211,94 +204,88 @@ function renderBookThumbnail(data) {
  * @returns {Promise<any>}
  */
 async function fetchData() {
-    // const url = "http://localhost:8080/api/v1/book"
-    const url = `${window.location.origin}api/v2/data`
-    let init = {
-        method: "GET",
-        mode: "cors",
-        headers: {
-            "Content-type": "application/json"
-        }
-    }
-    try {
-        const response = await fetch(url, init)
-        return await response.json()
-    } catch (err) {
-        console.log("fetch data error" + err)
-    }
-
+  // const url = "http://localhost:8080/api/v1/book"
+  const url = `${window.location.origin}api/v2/data`;
+  let init = {
+    method: "GET",
+    mode: "cors",
+    headers: {
+      "Content-type": "application/json",
+    },
+  };
+  try {
+    const response = await fetch(url, init);
+    return await response.json();
+  } catch (err) {
+    console.log("fetch data error" + err);
+  }
 }
 
 function createElements(book) {
-    let {...rest} = book
-    console.log(arguments)
+  let { ...rest } = book;
+  console.log(arguments);
 
-    let {
-        metaData: {
-            bookRank
-        }
-    } = book
-    console.log(bookRank)
+  let {
+    metaData: { bookRank },
+  } = book;
+  console.log(bookRank);
 
-    //table tags
-    let tableBody = document.querySelector("#books")
-    let tableRow = document.createElement("tr")
-    let author = document.createElement("td")
-    let title = document.createElement("td")
-    let gunningFog = document.createElement("td")
-    let language = document.createElement("td")
-    let bookId = document.createElement("td")
-    let metaData = document.createElement("td")
-    let buttonLot = document.createElement("td")
-    let delButton = document.createElement("button")
-    delButton.setAttribute("value", rest.bookId)
-    tableRow.setAttribute("id", rest.bookId)
-    console.log(tableRow)
-    let attributeId = delButton.getAttribute("value")
+  //table tags
+  let tableBody = document.querySelector("#books");
+  let tableRow = document.createElement("tr");
+  let author = document.createElement("td");
+  let title = document.createElement("td");
+  let gunningFog = document.createElement("td");
+  let language = document.createElement("td");
+  let bookId = document.createElement("td");
+  let metaData = document.createElement("td");
+  let buttonLot = document.createElement("td");
+  let delButton = document.createElement("button");
+  delButton.setAttribute("value", rest.bookId);
+  tableRow.setAttribute("id", rest.bookId);
+  console.log(tableRow);
+  let attributeId = delButton.getAttribute("value");
 
-    //attach an event listener to the dynamically added button
-    //to invoke the fetch delete call and re-render the layout
-    delButton.addEventListener("click", () => {
-        console.log(`Attribute id ${attributeId}`)
-        handleDel(attributeId).then()
-    })
+  //attach an event listener to the dynamically added button
+  //to invoke the fetch delete call and re-render the layout
+  delButton.addEventListener("click", () => {
+    console.log(`Attribute id ${attributeId}`);
+    handleDel(attributeId).then();
+  });
 
+  //supply values for the elements
+  buttonLot.appendChild(delButton);
+  author.innerText = rest.author;
+  gunningFog.innerText = rest.gunningFog;
+  title.innerText = rest.title;
+  language.innerText = rest.language;
+  metaData.innerText = bookRank;
+  bookId.innerText = rest.bookId;
+  delButton.innerText = "x";
+  delButton.classList.add("del");
 
-    //supply values for the elements
-    buttonLot.appendChild(delButton)
-    author.innerText = rest.author
-    gunningFog.innerText = rest.gunningFog
-    title.innerText = rest.title
-    language.innerText = rest.language
-    metaData.innerText = bookRank
-    bookId.innerText = rest.bookId
-    delButton.innerText = "x"
-    delButton.classList.add("del")
+  tableRow.appendChild(title);
+  tableRow.appendChild(author);
+  tableRow.appendChild(language);
+  tableRow.appendChild(gunningFog);
+  tableRow.appendChild(bookId);
+  tableRow.appendChild(metaData);
+  tableRow.appendChild(buttonLot);
 
-
-    tableRow.appendChild(title)
-    tableRow.appendChild(author)
-    tableRow.appendChild(language)
-    tableRow.appendChild(gunningFog)
-    tableRow.appendChild(bookId)
-    tableRow.appendChild(metaData)
-    tableRow.appendChild(buttonLot)
-
-    tableBody.appendChild(tableRow)
-
+  tableBody.appendChild(tableRow);
 }
 
 function renderBooks(data = []) {
-    console.log(data)
-    try {
-        data.forEach((book) => {
-            createElements(book)
-        })
-    } catch (e) {
-        console.log(e)
-    }
+  console.log(data);
+  try {
+    data.forEach((book) => {
+      createElements(book);
+    });
+  } catch (e) {
+    console.log(e);
+  }
 
-    return data
+  return data;
 }
 
 /**
@@ -307,82 +294,82 @@ function renderBooks(data = []) {
  * @param event
  */
 async function handlePost(event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    let bookTitle = document.querySelector("#book-title").value
-    let bookAuthor = document.querySelector("#book-author").value
-    let bookLanguage = document.querySelector("#book-lang").value
-    let metaData = document.querySelector("#meta").value
-    let gunningFog = document.querySelector("#fog-index").value
+  let bookTitle = document.querySelector("#book-title").value;
+  let bookAuthor = document.querySelector("#book-author").value;
+  let bookLanguage = document.querySelector("#book-lang").value;
+  let metaData = document.querySelector("#meta").value;
+  let gunningFog = document.querySelector("#fog-index").value;
 
-    let fields = [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog]
-    return await postData(fields)
+  let fields = [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog];
+  return await postData(fields);
 }
 
 function handlePut() {
-    let bookTitle = document.querySelector("#edit-title").value
-    let bookAuthor = document.querySelector("#edit-author").value
-    let bookLanguage = document.querySelector("#edit-lang").value
-    let metaData = document.querySelector("#editMeta").value
-    let gunningFog = document.querySelector("#edit-fog").value
+  let bookTitle = document.querySelector("#edit-title").value;
+  let bookAuthor = document.querySelector("#edit-author").value;
+  let bookLanguage = document.querySelector("#edit-lang").value;
+  let metaData = document.querySelector("#editMeta").value;
+  let gunningFog = document.querySelector("#edit-fog").value;
 
-    let fields = [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog]
-    return putData(fields)
+  let fields = [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog];
+  return putData(fields);
 }
 
 async function putData(inputs) {
-    let [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog] = inputs
+  let [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog] = inputs;
 
-    // const url = "http://localhost:8080/api/v1/book"
-    const url = `${window.location.origin}/api/v1/book`
+  // const url = "http://localhost:8080/api/v1/book"
+  const url = `${window.location.origin}/api/v1/book`;
 
-    let jsonObj = {
-        "title": bookTitle,
-        "author": bookAuthor,
-        "language": bookLanguage,
-        "metaData": {
-            "bookRank": parseInt(metaData)
-        },
-        "gunningFog": parseFloat(gunningFog)
-    }
+  let jsonObj = {
+    title: bookTitle,
+    author: bookAuthor,
+    language: bookLanguage,
+    metaData: {
+      bookRank: parseInt(metaData),
+    },
+    gunningFog: parseFloat(gunningFog),
+  };
 
-    let param = {
-        method: "put",
-        headers: {
-            "Content-type": "application/json"
-        },
-        body: JSON.stringify(jsonObj)
-    }
-    try {
-        const response = await fetch(url, param)
-        console.log("put response" + response)
-        const data = await response.json()
-        console.log("data from post response" + data)
-        // const newBook = await response.json()
-        return data
-    } catch (error) {
-        return error
-    }
+  let param = {
+    method: "put",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify(jsonObj),
+  };
+  try {
+    const response = await fetch(url, param);
+    console.log("put response" + response);
+    const data = await response.json();
+    console.log("data from post response" + data);
+    // const newBook = await response.json()
+    return data;
+  } catch (error) {
+    return error;
+  }
 }
 
 /**
  *
  */
 async function handleDel(id) {
-    if (confirm(`Delete the row ? ${id}`)) {
-        let rowToDelete = document.getElementById(`${id}`)
-        console.log("Row to delete", rowToDelete)
-        console.log(`Del fired ${id}`)
-        rowToDelete.remove()
-        // location.reload()
+  if (confirm(`Delete the row ? ${id}`)) {
+    let rowToDelete = document.getElementById(`${id}`);
+    console.log("Row to delete", rowToDelete);
+    console.log(`Del fired ${id}`);
+    rowToDelete.remove();
+    // location.reload()
 
-        await delData(id).then(() => {
-            console.log("Del request sent")
-            fetchData().then(data => {
-                renderBooks(data);
-            })
-        })
-    }
+    await delData(id).then(() => {
+      console.log("Del request sent");
+      fetchData().then((data) => {
+        renderBooks(data);
+      });
+    });
+  }
 }
 
 /**
@@ -391,18 +378,17 @@ async function handleDel(id) {
  * @returns {Promise<any>}
  */
 async function delData(bookId) {
+  let delUrl = `${window.location.origin}/api/v1/book/delete-book/${bookId}`;
 
-    let delUrl = `${window.location.origin}/api/v1/book/delete-book/${bookId}`
+  let param = {
+    method: "delete",
+  };
 
-    let param = {
-        method: "delete"
-    }
-
-    try {
-        await fetch(delUrl, param)
-    } catch (error) {
-        return "Book could not be found" + error
-    }
+  try {
+    await fetch(delUrl, param);
+  } catch (error) {
+    return "Book could not be found" + error;
+  }
 }
 
 /**
@@ -411,38 +397,37 @@ async function delData(bookId) {
  * @returns {Promise<any>}
  */
 async function postData(inputs) {
-    let [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog] = inputs
+  let [bookTitle, bookAuthor, bookLanguage, metaData, gunningFog] = inputs;
 
-    // const url = "http://localhost:8080/api/v1/book"
-    const url = `${window.location.origin}/api/v1/book`
+  // const url = "http://localhost:8080/api/v1/book"
+  const url = `${window.location.origin}/api/v1/book`;
 
-    let jsonObj = {
-        "title": bookTitle,
-        "author": bookAuthor,
-        "language": bookLanguage,
-        "metaData": {
-            "bookRank": parseInt(metaData)
-        },
-        "gunningFog": parseFloat(gunningFog)
-    }
+  let jsonObj = {
+    title: bookTitle,
+    author: bookAuthor,
+    language: bookLanguage,
+    metaData: {
+      bookRank: parseInt(metaData),
+    },
+    gunningFog: parseFloat(gunningFog),
+  };
 
-    let param = {
-        method: "post",
-        mode: "cors",
-        headers: {
-            "Content-type": "application/json"
-        },
-        body: JSON.stringify(jsonObj)
-    }
-    try {
-        const response = await fetch(url, param)
-        console.log(" post response " + response)
-        const [data] = await Promise.all([response.json()])
-        console.log(" data from post response " + data)
-        // const newBook = await response.json()
-        return data
-    } catch (error) {
-        return error
-    }
-
+  let param = {
+    method: "post",
+    mode: "cors",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify(jsonObj),
+  };
+  try {
+    const response = await fetch(url, param);
+    console.log(" post response " + response);
+    const [data] = await Promise.all([response.json()]);
+    console.log(" data from post response " + data);
+    // const newBook = await response.json()
+    return data;
+  } catch (error) {
+    return error;
+  }
 }
